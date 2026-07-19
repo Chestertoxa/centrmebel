@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Дизайнерская мягкая мебель — Центр мебель</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* КЛАССЫ ДЛЯ ПРЕМИАЛЬНОЙ АНИМАЦИИ (APPLE STYLE) */
+        .premium-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 24px;
+            aspect-ratio: 4 / 5;
+            transition: box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            background-color: white;
+        }
+
+        .card-image-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            object-position: center;
+            transform: scale(1);
+            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
+            z-index: 1;
+        }
+
+        .card-gradient-overlay {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 60%;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+            z-index: 2;
+        }
+
+        .card-content-block {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%;
+            padding: 40px;
+            z-index: 3;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+        }
+
+        .premium-card:hover { box-shadow: 0 30px 60px rgba(0,0,0,0.12); }
+        .premium-card:hover .card-image-bg { transform: scale(1.08); }
+        .premium-card:hover .card-content-block { transform: translateY(0); opacity: 1; }
+
+        @keyframes pulse-bg {
+            0%, 100% { background-color: #e5e7eb; }
+            50% { background-color: #d1d5db; }
+        }
+        .skeleton { animation: pulse-bg 2s infinite ease-in-out; }
+    </style>
+</head>
+<body class="min-h-screen py-16 px-4 sm:px-6 lg:px-12">
+
+    <div class="max-w-7xl w-full mx-auto text-center mb-16 mt-10">
+        <span class="text-xs font-semibold tracking-widest text-zinc-500 uppercase block mb-3">Собственное производство мебели и древесины</span>
+        <h1 class="text-4xl md:text-5xl font-light text-zinc-900 tracking-tight leading-tight">
+            Фабрика <span class="font-normal text-black">«Центр мебель»</span>
+        </h1>
+        <p class="max-w-xl mx-auto text-zinc-500 text-sm mt-4 font-light">
+            Полный цикл обработки от отборной древесины до дизайнерской мягкой мебели. Сухая березовая фанера, пена HR и ткани Easy Clean.
+        </p>
+    </div>
+
+    <div class="max-w-7xl w-full mx-auto mb-16 flex flex-wrap items-center justify-center gap-2 md:gap-4 bg-white p-2 rounded-full shadow-sm border border-zinc-100">
+        <button class="filter-btn text-sm tracking-tight font-medium text-black bg-zinc-100 px-6 py-2.5 rounded-full transition-all duration-200" data-category="all">
+            Все модели
+        </button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Прямые диваны,Модульные диваны,Диваны-кровати">
+            Диваны
+        </button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Индивидуальные кресла">
+            Кресла
+        </button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Банкетки и пуфы">
+            Пуфы
+        </button>
+    </div>
+
+    <div id="catalog-container" class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        </div>
+
+    <div id="product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden opacity-0 transition-opacity duration-300 ease-out" style="background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px);">
+        <div class="min-h-screen flex items-center justify-center p-4 md:p-12">
+            
+            <div class="bg-white max-w-5xl w-full rounded-3xl shadow-2xl overflow-hidden relative transform scale-95 transition-transform duration-300 ease-out flex flex-col md:flex-row">
+                
+                <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-zinc-100/80 hover:bg-zinc-200 rounded-full flex items-center justify-center transition cursor-pointer text-zinc-800">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+
+                <div class="w-full md:w-1/2 bg-zinc-50 flex flex-col items-center justify-center p-8 min-h-[400px] md:min-h-[550px] relative group">
+                    
+                    <div class="w-full flex-1 flex items-center justify-center relative overflow-hidden">
+                        <img id="modal-img" src="" alt="" class="max-w-full max-h-[400px] object-contain transition-all duration-300">
+                        
+                        <button id="gallery-prev" class="absolute left-2 w-10 h-10 rounded-full bg-white/80 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                        </button>
+                        <button id="gallery-next" class="absolute right-2 w-10 h-10 rounded-full bg-white/80 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+
+                    <div id="gallery-dots" class="flex items-center justify-center gap-2 mt-4"></div>
+                </div>
+
+                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-between border-l border-zinc-100">
+                    <div class="flex flex-col gap-4">
+                        <span id="modal-category" class="text-xs font-semibold tracking-widest text-zinc-400 uppercase"></span>
+                        <h2 id="modal-name" class="text-3xl font-light text-zinc-900 tracking-tight"></h2>
+                        <div id="modal-price" class="text-xl font-medium text-zinc-900 mb-2"></div>
+                        
+                        <hr class="border-zinc-100">
+
+                        <div class="w-full">
+                            <div class="flex border-b border-zinc-100 gap-4 text-[10px] uppercase tracking-wider font-semibold mb-4 overflow-x-auto pb-1">
+                                <button class="modal-tab-link text-black border-b border-black pb-1" data-modal-tab="modal-specs">Характеристики</button>
+                                <button class="modal-tab-link text-zinc-400 pb-1" data-modal-tab="modal-tech">Конструкция</button>
+                                <button class="modal-tab-link text-zinc-400 pb-1" data-modal-tab="modal-dimensions">Занос</button>
+                                <button class="modal-tab-link text-zinc-400 pb-1" data-modal-tab="modal-service">Сервис</button>
+                            </div>
+                            <div class="min-h-[140px]">
+                                <div id="modal-specs" class="modal-tab-content text-zinc-600 text-xs leading-relaxed"></div>
+                                <div id="modal-tech" class="modal-tab-content hidden text-zinc-600 text-xs leading-relaxed"></div>
+                                <div id="modal-dimensions" class="modal-tab-content hidden text-zinc-600 text-xs leading-relaxed"></div>
+                                <div id="modal-service" class="modal-tab-content hidden text-zinc-600 text-xs leading-relaxed"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-3 mt-8">
+                        <a id="modal-ozon-btn" href="" target="_blank" class="w-full sm:w-1/2 bg-zinc-900 hover:bg-black text-white text-center text-xs font-medium py-4 px-6 rounded-full transition shadow-sm">
+                            Купить на OZON
+                        </a>
+                        <button onclick="window.Bitrix24WidgetObject && window.Bitrix24WidgetObject.show()" class="w-full sm:w-1/2 border border-zinc-200 hover:border-zinc-900 bg-transparent text-zinc-800 text-center text-xs font-medium py-4 px-6 rounded-full transition flex items-center justify-center gap-2 cursor-pointer">
+                            Консультация
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<div class="max-w-7xl w-full mx-auto mt-24 border-t border-gray-100 pt-16">
+        <div class="max-w-3xl mb-12">
+            <span class="text-xs font-semibold tracking-widest text-zinc-400 uppercase block mb-3">Стандарты качества</span>
+            <h2 class="text-3xl md:text-4xl font-light text-zinc-900 tracking-tight leading-tight">
+                Почему искушенные клиенты выбирают фабрику «Центр мебель»
+            </h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl border border-zinc-100/80 shadow-sm">
+                <div class="text-zinc-900 font-medium text-lg mb-3">Собственное производство полного цикла</div>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Мы сами заготавливаем и калибруем древесину, контролируя её сушку до идеальных 0% влажности. Это позволяет нам гарантировать монолитность каркаса и полное отсутствие скрипов на протяжении поколений.
+                </p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl border border-zinc-100/80 shadow-sm">
+                <div class="text-zinc-900 font-medium text-lg mb-3">Честная цена за премиум-качество</div>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    В отличие от конкурентов, мы указываем стартовую цену за готовую к жизни, износостойкую ткань от 3-й категории. Никаких скрытых наценок, доплат за «базовую комплектацию» или техническую ткань.
+                </p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl border border-zinc-100/80 shadow-sm">
+                <div class="text-zinc-900 font-medium text-lg mb-3">Железная ответственность за сроки</div>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Каждый заказ сопровождается четким договором. Наша фабрика работает как часы, но если мы задержим производство хотя бы на один день — мы выплатим вам неустойку без лишних споров и юридических проволочек.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="max-w-4xl w-full mx-auto mt-24 border-t border-gray-100 pt-16">
+        <div class="text-center mb-12">
+            <span class="text-xs font-semibold tracking-widest text-zinc-400 uppercase block mb-2">Часто задаваемые вопросы</span>
+            <h2 class="text-3xl font-light text-zinc-900 tracking-tight">Отвечаем на то, что действительно важно</h2>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6">
+                <h4 class="text-sm font-medium text-zinc-900 mb-2">Как упаковывается мебель при доставке в регионы?</h4>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Мы знаем, как легко повредить ткань при небрежной транспортировке. Каждый диван и кресло проходят многослойную консервацию: углы защищаются поролоновыми демпферами, затем мебель укутывается в пятислойный гофрокартон и запаивается в плотную влагозащитную пленку. Изделие приедет к вам в первозданном фабричном виде.
+                </p>
+            </div>
+
+            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6">
+                <h4 class="text-sm font-medium text-zinc-900 mb-2">Защитит ли ткань Easy Clean от когтей домашних животных?</h4>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Наши ткани (шениллы, велюры, букле) имеют специальную маркировку Pet-friendly. Сверхплотное переплетение нитей полностью лишено петель, за которые коготь кошки мог бы зацепиться. Когти просто соскальзывают по поверхности, не оставляя зацепок, а шерсть легко удаляется обычным валиком.
+                </p>
+            </div>
+
+            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6">
+                <h4 class="text-sm font-medium text-zinc-900 mb-2">Что делать, если диван не пройдет в мой дверной проем?</h4>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Вам не нужно беспокоиться об этом. Все наши крупные модели диванов имеют полностью разборную модульную структуру секций. Они без проблем заносятся через стандартные дверные проемы шириной от 70-75 см и легко помещаются в обычный пассажирский лифт.
+                </p>
+            </div>
+
+            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6">
+                <h4 class="text-sm font-medium text-zinc-900 mb-2">Есть ли у вашей мебели резкий химический запах клея?</h4>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Исключено. Мы заботимся об экологии вашего дома, поэтому при сборке и фиксации слоев высокоэластичной пены HR используем сертифицированные клеевые составы исключительно на водной основе. Мебель абсолютно безопасна для детей и аллергиков и не имеет никакого токсичного запаха формальдегида.
+                </p>
+            </div>
+        </div>
+    </div>
+
+
+    <footer class="max-w-7xl w-full mx-auto mt-32 border-t border-zinc-200 pt-16 pb-12 text-zinc-800">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
+            
+            <div class="flex flex-col gap-4">
+                <div class="text-lg font-medium tracking-tight text-black">Центр мебель</div>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">
+                    Собственное производство дизайнерской мягкой мебели из отборной, правильно высушенной березовой древесины. Создаем комфорт, который служит поколениям.
+                </p>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <div class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Наши шоурумы</div>
+                <ul class="text-xs text-zinc-600 space-y-2 font-light">
+                    <li>Флагманский салон: <span class="font-normal text-black block mt-0.5">г. Москва, ул. Дизайнеров, д. 12</span></li>
+                    <li>Центральный шоурум: <span class="font-normal text-black block mt-0.5">г. Санкт-Петербург, Невский пр., д. 45</span></li>
+                    <li class="text-[11px] text-zinc-400 italic">Работаем ежедневно с 10:00 до 22:00</li>
+                </ul>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <div class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Связаться с нами</div>
+                <a href="tel:+78000000000" class="text-base font-medium text-black hover:text-zinc-600 transition tracking-tight">
+                    8 (800) 555-35-35
+                </a>
+                <p class="text-[11px] text-zinc-400 font-light -mt-1">Бесплатный звонок по всей России</p>
+                <div class="text-xs text-zinc-600 font-light mt-1">Отдел заботы и рекламаций: <br><span class="text-black font-normal">support@centrmebel.ru</span></div>
+            </div>
+
+            <div class="flex flex-col gap-3">
+                <div class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Служба поддержки</div>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">Наши менеджеры и умный ИИ-помощник на связи 24/7 в удобном для вас формате.</p>
+                <button onclick="window.Bitrix24WidgetObject && window.Bitrix24WidgetObject.show()" class="w-full bg-zinc-900 hover:bg-black text-white text-center text-xs font-medium py-3 px-4 rounded-full transition tracking-wide cursor-pointer shadow-sm">
+                    Открыть чат поддержки
+                </button>
+            </div>
+
+        </div>
+
+        <div class="border-t border-zinc-100 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400 font-light">
+            <div>© 2026 Фабрика «Центр мебель». Все права защищены.</div>
+            <div class="flex gap-6">
+                <a href="#" class="hover:text-black transition">Политика конфиденциальности</a>
+                <a href="#" class="hover:text-black transition">Публичная оферта</a>
+            </div>
+        </div>
+    </footer>
+	
+    <script>
+        // ПОЛНАЯ БАЗА ДАННЫХ С ДВУМЯ РАКУРСАМИ ДЛЯ КАЖДОЙ МОДЕЛИ
+        const PRODUCTS_DATA = [
+            {
+                id: "amster-sofa",
+                category: "Прямые диваны",
+                name: "Диван Амстердам",
+                price: "195 000 ₽",
+                mainImage: "images/sofa-amster.webp",
+                images: [
+                    "images/sofa-amster.webp",
+                    "images/sofa-amster1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 4 из 10 (С эффектом утопания)</li><li><strong class="font-medium text-zinc-900">Ткань:</strong> Премиальный шенилл Easy Clean</li><li><strong class="font-medium text-zinc-900">Защита от питомцев:</strong> Pet-friendly (Устойчива к когтям)</li></ul>`,
+                    tech: `<p class="mb-2"><strong class="font-medium text-zinc-900">Каркас «Центр мебель»:</strong> Калиброванный брус и сухая березовая фанера высшего сорта (0% влажности). Полное отсутствие скрипа.</p><p><strong class="font-medium text-zinc-900">Наполнение:</strong> Многослойная высокоэластичная пена HR без химического запаха.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 240 х 105 х 85 см. Конструкция разборная, минимальный проем дверей для заноса — 75 см. Пройдет в пассажирский лифт.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Сервис под ключ:</strong> Доставка, занос, сборка за 10 минут и вывоз мусора включены. Мастера работают строго в бахилах.</p>`
+                }
+            },
+            {
+                id: "provence-chair",
+                category: "Индивидуальные кресла",
+                name: "Кресло Прованс",
+                price: "68 000 ₽",
+                mainImage: "images/chair-provence.webp",
+                images: [
+                    "images/chair-provence.webp",
+                    "images/chair-provence1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 5 из 10 (Упругая анатомическая поддержка)</li><li><strong class="font-medium text-zinc-900">Ткань:</strong> Фактурное букле Easy Clean (Чистится водой)</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Конструкция:</strong> Силовые узлы из просушенной фанеры собственного производства. Блок независимых мини-пружин и пена Memory Foam.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 90 х 85 х 95 см. Поставляется в коробке, требуемая ширина дверного проема — от 65 см.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Премиум-доставка:</strong> Распаковка при вас, установка на мягкие фетровые подпятники для защиты ламината.</p>`
+                }
+            },
+            {
+                id: "soft-chair",
+                category: "Индивидуальные кресла",
+                name: "Кресло Софт",
+                price: "72 000 ₽",
+                mainImage: "images/chair-soft.webp",
+                images: [
+                    "images/chair-soft.webp",
+                    "images/chair-soft1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 3 из 10 (Максимально мягкое, утопающее)</li><li><strong class="font-medium text-zinc-900">Ткань:</strong> Пудровый шелковистый шенилл</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Наполнение:</strong> Гипоаллергенный аэропух высокой плотности в сочетании с пеной HR. Исключает усадку и появление «волн».</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 105 х 95 х 85 см. Подушки съемные. Требуемый проем — 70 см.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Сервис:</strong> Занесем в квартиру в защитных чехлах, соберем, полностью уберем за собой упаковочные материалы.</p>`
+                }
+            },
+            {
+                id: "hero-bed",
+                category: "Диваны-кровати",
+                name: "Диван-кровать Хиро",
+                price: "225 000 ₽",
+                mainImage: "images/hero-bed.webp",
+                images: [
+                    "images/hero-bed.webp",
+                    "images/hero-bed1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость сна:</strong> 6 из 10 (Ортопедический баланс)</li><li><strong class="font-medium text-zinc-900">Механизм:</strong> Усиленный шагающий премиум-класс</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Материалы:</strong> Основание из шлифованной березовой фанеры фабрики «Центр мебель» и стального профиля. Спальное место на независимом пружинном блоке.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 220 х 100 х 90 см. Модель модульная, легко проходит в стандартные проемы от 75 см.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Монтаж:</strong> Профессиональная сборка нашими мастерами за 15 минут. Проверка хода механизма.</p>`
+                }
+            },
+            {
+                id: "kr-kzr-chair",
+                category: "Индивидуальные кресла",
+                name: "Кресло Козырь",
+                price: "85 000 ₽",
+                mainImage: "images/kr-kzr.webp",
+                images: ["images/kr-kzr.webp"], // Для этой модели один ракурс
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 5 из 10 (Идеальный баланс)</li><li><strong class="font-medium text-zinc-900">Ткань:</strong> Итальянское премиум-букле Easy Clean</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Технологии:</strong> Монолитный сферический каркас из гнутоклееного шпона. Формованная литая пена HR защищает от деформации.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 95 х 90 х 85 см. Проем для заноса в фабричном коробе — от 80 см.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Контроль качества:</strong> Распаковка и проверка каждого шва в присутствии клиента. Работа в сменной обуви.</p>`
+                }
+            },
+            {
+                id: "classic-pouf",
+                category: "Банкетки и пуфы",
+                name: "Пуф Классик",
+                price: "32 000 ₽",
+                mainImage: "images/pouf-classic.webp",
+                images: [
+                    "images/pouf-classic.webp",
+                    "images/pouf-classic1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 6 из 10 (Упругое сиденье, держит форму)</li><li><strong class="font-medium text-zinc-900">Опоры:</strong> Массив дуба в темной тонировке</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Сборка:</strong> Каркас из сухого бруса хвойных пород. Наполнение — износостойкая пена высокой плотности, исключающая проседания.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 90 х 45 х 48 см. Поставляется в собранном виде, проходит в любой проем.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Доставка:</strong> Подъем и распаковка включены в стоимость. Полное отсутствие скрытых платежей.</p>`
+                }
+            },
+            {
+                id: "round-pouf",
+                category: "Банкетки и пуфы",
+                name: "Пуф Раунд",
+                price: "28 000 ₽",
+                mainImage: "images/pouf-round.webp",
+                images: [
+                    "images/pouf-round.webp",
+                    "images/pouf-round1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 4 из 10 (Комфортная мягкая посадка)</li><li><strong class="font-medium text-zinc-900">Безопасность:</strong> Полностью мягкий корпус без острых углов</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Материалы:</strong> Жесткий внутренний цилиндр из фанеры ФК обтянут толстым слоем пены с эффектом восстановления геометрии.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> Диаметр 50 см, высота 45 см. Мобильный, поставляется в плотном эко-коробе.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Экологичность:</strong> Весь упаковочный картон увозится нашей службой доставки на вторичную переработку.</p>`
+                }
+            },
+            {
+                id: "ervin-sofa",
+                category: "Диваны-кровати",
+                name: "Диван Эрвин",
+                price: "178 000 ₽",
+                mainImage: "images/sofa-ervin.webp",
+                images: [
+                    "images/sofa-ervin.webp",
+                    "images/sofa-ervin1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость сна:</strong> 5 из 10 (Ортопедический баланс)</li><li><strong class="font-medium text-zinc-900">Ткань:</strong> Премиум-велюр Easy Clean (устойчив к зацепкам когтей)</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Внутренние узлы:</strong> Немецкие пазовые замки исключают перекосы и скрип. Подушки на базе блока независимых пружин.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты:</strong> 215 х 100 х 88 см. Секционная система сборки позволяет заносить модули через проемы от 72 см.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Монтаж под ключ:</strong> Быстрая стыковка без инструментов за 10 минут. Использование защитных ковриков под инструмент.</p>`
+                }
+            },
+            {
+                id: "nirvana-sofa",
+                category: "Модульные диваны",
+                name: "Диван Нирвана",
+                price: "210 000 ₽",
+                mainImage: "images/sofa-nirvana.webp",
+                images: [
+                    "images/sofa-nirvana.webp",
+                    "images/sofa-nirvana1.webp"
+                ],
+                ozonLink: "https://ozon.ru",
+                tabs: {
+                    specs: `<ul class="space-y-2 font-light"><li><strong class="font-medium text-zinc-900">Жесткость:</strong> 4 из 10 (Расслабляющая лаунж-посадка)</li><li><strong class="font-medium text-zinc-900">Конфигурация:</strong> Блоки фиксируются скрытыми стальными замками</li></ul>`,
+                    tech: `<p><strong class="font-medium text-zinc-900">Конструкция:</strong> Сложный прочный каркас из сибирского калиброванного бруса и березовой фанеры. Наполнение — пена HR с эффектом памяти Memory Foam.</p>`,
+                    dimensions: `<p><strong class="font-medium text-zinc-900">Габариты сборки:</strong> 260 х 110 х 82 см. Каждый модуль едет в индивидуальной влагозащитной пленке. Проходит в проемы от 70 см.</p>`,
+                    service: `<p><strong class="font-medium text-zinc-900">Премиум-сервис:</strong> Занос, сборка и стяжка модулей скрытыми замками нашими мастерами. Весь мусор вывозится сразу.</p>`
+                }
+            }
+        ];
+
+        // Глобальные переменные для отслеживания текущего открытого слайдера
+        let currentImageArray = [];
+        let currentImageIndex = 0;
+
+        function renderCatalog(filterCategory = "all") {
+            const container = document.getElementById('catalog-container');
+            container.innerHTML = ''; 
+
+            const allowedCategories = filterCategory.split(',');
+
+            PRODUCTS_DATA.forEach(product => {
+                if (filterCategory !== "all" && !allowedCategories.includes(product.category) && !allowedCategories.includes(product.category.split(' ')[0])) {
+                    return;
+                }
+
+                const productCard = document.createElement('div');
+                productCard.className = "premium-card skeleton cursor-pointer";
+                productCard.id = `card-${product.id}`;
+
+                productCard.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'A') openModal(product);
+                });
+
+                productCard.innerHTML = `
+                    <img src="${product.mainImage}" alt="${product.name}" class="card-image-bg" onload="this.parentElement.classList.remove('skeleton')">
+                    <div class="card-gradient-overlay"></div>
+                    <div class="card-content-block">
+                        <span class="text-xs font-medium tracking-wider text-zinc-300 uppercase mb-1.5 block">${product.category}</span>
+                        <h2 class="text-3xl font-light text-white tracking-tight mb-2">${product.name}</h2>
+                        <div class="text-xl font-normal text-white mb-6">${product.price}</div>
+                        <hr class="border-zinc-700/50 my-4">
+                        <p class="text-zinc-300 text-xs font-light leading-relaxed">Древесина собственного производства. Пена HR. Защита Easy Clean.</p>
+                        <div class="card-buttons flex flex-col gap-3">
+                            <a href="${product.ozonLink}" target="_blank" class="w-full bg-white hover:bg-zinc-100 text-black text-center text-sm font-medium py-3.5 px-6 rounded-full transition shadow-sm">
+                                Подробнее / Купить на OZON
+                            </a>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(productCard);
+            });
+        }
+
+        // ЛОГИКА ГАЛЕРЕИ В МОДАЛКЕ
+        const modalImg = document.getElementById('modal-img');
+        const dotsContainer = document.getElementById('gallery-dots');
+
+        function updateModalImage() {
+            modalImg.style.opacity = '0';
+            setTimeout(() => {
+                modalImg.src = currentImageArray[currentImageIndex];
+                modalImg.style.opacity = '1';
+                
+                // Обновляем активную точку-индикатор
+                const dots = dotsContainer.querySelectorAll('div');
+                dots.forEach((dot, idx) => {
+                    if (idx === currentImageIndex) {
+                        dot.className = "w-6 h-1.5 rounded-full bg-zinc-900 transition-all duration-300";
+                    } else {
+                        dot.className = "w-1.5 h-1.5 rounded-full bg-zinc-300 transition-all duration-300";
+                    }
+                });
+            }, 150);
+        }
+
+        document.getElementById('gallery-prev').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex === 0) ? currentImageArray.length - 1 : currentImageIndex - 1;
+            updateModalImage();
+        });
+
+        document.getElementById('gallery-next').addEventListener('click', (e) => {
+            e.stopPropagation();
+            currentImageIndex = (currentImageIndex === currentImageArray.length - 1) ? 0 : currentImageIndex + 1;
+            updateModalImage();
+        });
+
+        // ОТКРЫТИЕ МОДАЛКИ И ИНИЦИАЛИЗАЦИЯ СЛАЙДЕРА
+        const modal = document.getElementById('product-modal');
+        const modalContent = modal.querySelector('.bg-white');
+
+        function openModal(product) {
+            currentImageArray = product.images || [product.mainImage];
+            currentImageIndex = 0;
+
+            document.getElementById('modal-category').textContent = product.category;
+            document.getElementById('modal-name').textContent = product.name;
+            document.getElementById('modal-price').textContent = product.price;
+            document.getElementById('modal-ozon-btn').href = product.ozonLink;
+
+            document.getElementById('modal-specs').innerHTML = product.tabs?.specs || '<p>Загрузка...</p>';
+            document.getElementById('modal-tech').innerHTML = product.tabs?.tech || '<p>Загрузка...</p>';
+            document.getElementById('modal-dimensions').innerHTML = product.tabs?.dimensions || '<p>Загрузка...</p>';
+            document.getElementById('modal-service').innerHTML = product.tabs?.service || '<p>Загрузка...</p>';
+
+            // Генерируем точки под галереей
+            dotsContainer.innerHTML = '';
+            currentImageArray.forEach((_, idx) => {
+                const dot = document.createElement('div');
+                dot.addEventListener('click', () => {
+                    currentImageIndex = idx;
+                    updateModalImage();
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            updateModalImage();
+
+            // Анимация появления Apple
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modalContent.classList.remove('scale-95');
+            }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.add('opacity-0');
+            modalContent.classList.add('scale-95');
+            setTimeout(() => modal.classList.add('hidden'), 300);
+            document.body.style.overflow = '';
+        }
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal || e.target.classList.contains('min-h-screen')) closeModal();
+        });
+
+        // ЛОГИКА ТАБОВ
+        const modalTabLinks = document.querySelectorAll('.modal-tab-link');
+        const modalTabContents = document.querySelectorAll('.modal-tab-content');
+
+        modalTabLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const targetTabId = this.getAttribute('data-modal-tab');
+                modalTabLinks.forEach(l => {
+                    l.classList.replace('text-black', 'text-zinc-400');
+                    l.style.borderBottomColor = 'transparent';
+                });
+                modalTabContents.forEach(c => c.classList.add('hidden'));
+                this.classList.replace('text-zinc-400', 'text-black');
+                this.style.borderBottomColor = '#000000';
+                document.getElementById(targetTabId).classList.remove('hidden');
+            });
+        });
+
+        // Фильтрация категорий
+        const filterButtons = document.querySelectorAll('.filter-btn');
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterButtons.forEach(b => {
+                    b.classList.remove('text-black', 'bg-zinc-100', 'font-medium');
+                    b.classList.add('text-zinc-600', 'font-light', 'bg-transparent');
+                });
+                this.classList.remove('text-zinc-600', 'font-light', 'bg-transparent');
+                this.classList.add('text-black', 'bg-zinc-100', 'font-medium');
+                renderCatalog(this.getAttribute('data-category'));
+            });
+        });
+
+        renderCatalog("all");
+    </script>
+</body>
+</html>
