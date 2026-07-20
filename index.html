@@ -3,229 +3,308 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ✏️ ТЕКСТ: Название вкладки в браузере -->
     <title>Дизайнерская мягкая мебель — Центр Мебель</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+    <!-- === НАЧАЛО БЛОКА: СТИЛИ (CSS) === -->
+    <!-- Здесь прописан визуал и анимации. Если не разбираешься в CSS, этот блок лучше не трогать, чтобы не сломать дизайн. -->
     <style>
         html { scroll-behavior: smooth; }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #fcfcfc;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ */
-        .fade-in-up {
-            opacity: 0;
-            transform: translateY(30px);
-            animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .delay-100 { animation-delay: 0.1s; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-300 { animation-delay: 0.3s; }
-
-        /* АНИМАЦИИ ПРИ СКРОЛЛЕ (НОВОЕ) */
-        .reveal-on-scroll {
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
-        }
-        .reveal-on-scroll.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* КЛАССЫ ДЛЯ КАРТОЧЕК */
-        .premium-card {
-            position: relative;
-            overflow: hidden;
-            border-radius: 24px;
-            aspect-ratio: 4 / 5;
-            transition: box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            background-color: white;
-            cursor: pointer;
-        }
-
-        .card-image-bg {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            object-fit: cover;
-            object-position: center;
-            transform: scale(1);
-            transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease;
-            z-index: 1;
-        }
-
-        .card-gradient-overlay {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%; height: 60%;
-            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%);
-            z-index: 2;
-            transition: height 0.6s ease;
-        }
-
-        .card-content-block {
-            position: absolute;
-            bottom: 0; left: 0; width: 100%;
-            padding: 40px;
-            z-index: 3;
-            transform: translateY(20px);
-            opacity: 0.9;
-            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
-        }
-
-        .premium-card:hover { 
-            box-shadow: 0 30px 60px rgba(0,0,0,0.12); 
-            transform: translateY(-8px);
-        }
+        body { font-family: 'Inter', sans-serif; background-color: #fcfcfc; -webkit-font-smoothing: antialiased; }
+        .fade-in-up { opacity: 0; transform: translateY(30px); animation: fadeInUp 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+        .reveal-on-scroll { opacity: 0; transform: translateY(40px); transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1); }
+        .reveal-on-scroll.is-visible { opacity: 1; transform: translateY(0); }
+        .premium-card { position: relative; overflow: hidden; border-radius: 24px; aspect-ratio: 4 / 5; transition: box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1); background-color: white; cursor: pointer; }
+        .card-image-bg { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1); transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s ease; z-index: 1; }
+        .card-gradient-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 60%; background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%); z-index: 2; transition: height 0.6s ease; }
+        .card-content-block { position: absolute; bottom: 0; left: 0; width: 100%; padding: 40px; z-index: 3; transform: translateY(20px); opacity: 0.9; transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease; }
+        .premium-card:hover { box-shadow: 0 30px 60px rgba(0,0,0,0.12); transform: translateY(-8px); }
         .premium-card:hover .card-image-bg { transform: scale(1.06); }
         .premium-card:hover .card-gradient-overlay { height: 75%; }
         .premium-card:hover .card-content-block { transform: translateY(0); opacity: 1; }
-
-        /* АНИМАЦИЯ ДЛЯ СЛАЙДОВ В МОДАЛКЕ */
-        .slide-animate {
-            opacity: 0;
-            transform: translateY(15px) scale(0.98);
-            animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-        }
-        @keyframes slideUpFade {
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        @keyframes pulse-bg {
-            0%, 100% { background-color: #e5e7eb; }
-            50% { background-color: #d1d5db; }
-        }
+        .slide-animate { opacity: 0; transform: translateY(15px) scale(0.98); animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+        @keyframes slideUpFade { to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes pulse-bg { 0%, 100% { background-color: #e5e7eb; } 50% { background-color: #d1d5db; } }
         .skeleton { animation: pulse-bg 2s infinite ease-in-out; }
+        .hero-slide { transition: opacity 1s ease-in-out; }
     </style>
+    <!-- === КОНЕЦ БЛОКА: СТИЛИ === -->
 </head>
 <body class="min-h-screen">
 
+    <!-- === НАЧАЛО БЛОКА: ВЕРХНЯЯ ШАПКА (HEADER) === -->
     <header id="main-header" class="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex items-center justify-between sticky top-0 z-40 transition-all duration-300 ease-in-out fade-in-up">
-        <!-- Кликабельный логотип (возврат на главную/наверх) -->
+        
+        <!-- ЛОГОТИП И НАЗВАНИЕ -->
         <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex items-center gap-4 group cursor-pointer">
+            <!-- 🖼️ ИЗОБРАЖЕНИЕ: Замени logo.png на название своего файла логотипа -->
             <img src="logo.png" alt="Центр Мебель" class="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm transition-transform duration-500 group-hover:scale-105">
             <div class="flex flex-col justify-center">
+                <!-- ✏️ ТЕКСТ: Название компании -->
                 <span class="text-xl md:text-2xl font-medium tracking-tight text-zinc-900 leading-none group-hover:text-[#E63946] transition-colors">Центр Мебель</span>
                 <span class="text-[9px] md:text-[10px] tracking-[0.15em] text-zinc-400 uppercase mt-1">Собственное производство</span>
             </div>
         </a>
 
+        <!-- ГЛАВНОЕ МЕНЮ НАВИГАЦИИ -->
+        <!-- 🔗 ССЫЛКИ МЕНЮ: Чтобы ссылка работала, замени href="#" на нужную страницу. 
+             Пример: href="catalog.html" (если страница лежит в этой же папке) или href="https://t.me/твой_канал" -->
         <nav class="hidden lg:flex items-center gap-8">
-            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Диваны</a>
-            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Кровати</a>
-            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Кресла</a>
-            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Пуфы</a>
+            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Каталог</a>
+            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Магазины</a>
+            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Идеи</a>
+            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Акции</a>
+            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Новинки</a>
         </nav>
 
+        <!-- ТЕЛЕФОН И КНОПКА "КАТАЛОГ" -->
         <div class="hidden lg:flex items-center gap-6">
+            <!-- 🔗 ССЫЛКА-ТЕЛЕФОН: В href="tel:..." впиши номер без пробелов. А внутри тега <a>...</a> впиши красивый номер для людей. -->
             <a href="tel:+74712555555" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">+7 (4712) 55-55-55</a>
             <button onclick="document.getElementById('catalog-container').scrollIntoView({behavior: 'smooth'})" class="bg-black text-white text-sm font-medium py-2.5 px-6 rounded-full hover:bg-zinc-800 transition shadow-md">Каталог</button>
         </div>
     </header>
+    <!-- === КОНЕЦ БЛОКА: ВЕРХНЯЯ ШАПКА === -->
 
-    <!-- Баннер (оставлен без изменений для экономии места) -->
-    <section class="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-12 lg:py-16 mb-8 fade-in-up delay-200">
-        <div class="w-full relative rounded-[32px] overflow-hidden bg-white shadow-xl flex items-center min-h-[440px] md:min-h-[500px]">
-            <div class="absolute top-0 right-0 h-full w-full md:w-[65%] z-10">
-                <img src="images/hero-bed1.webp" alt="Центр Мебель — Премиальный комфорт" class="h-full w-full object-cover object-center">
+    <!-- === НАЧАЛО БЛОКА: БОЛЬШОЙ СЛАЙДЕР (HERO) === -->
+    <section class="relative w-full h-[60vh] min-h-[500px] md:h-[80vh] md:min-h-[700px] overflow-hidden bg-zinc-900 mb-12">
+        <div id="hero-slider" class="w-full h-full relative">
+            
+            <!-- 🖼️ ФОТО СЛАЙДОВ: Меняй пути в src="..." на свои. -->
+            <!-- Слайд 1 -->
+            <div class="hero-slide absolute inset-0 opacity-100 z-10">
+                <img src="images/hero-bed1.webp" alt="Премиум кровать" class="w-full h-full object-cover object-center">
+                <div class="absolute inset-0 bg-black/30"></div> <!-- Затемнение фото -->
             </div>
-            <div class="w-full md:w-[50%] h-full p-10 md:p-16 z-20 flex flex-col items-start justify-center relative min-h-[440px] md:min-h-[500px]">
-                <div class="absolute inset-0 -z-10 hidden md:block backdrop-blur-xl bg-gradient-to-r from-white via-white/95 via-[75%] to-white/0" style="mask-image: linear-gradient(to right, black 65%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 65%, transparent 100%);"></div>
-                <div class="absolute inset-0 -z-10 block md:hidden bg-gradient-to-t from-white via-white/90 to-transparent backdrop-blur-md"></div>
-                <span class="text-[11px] font-bold tracking-widest text-[#E63946] uppercase mb-4">Собственное производство</span>
-                <h1 class="text-4xl lg:text-[2.8rem] font-medium text-zinc-900 tracking-tight leading-[1.1] mb-5">
-                    Мебель, которая<br>становится частью дома
-                </h1>
-                <p class="text-zinc-600 text-sm font-light leading-relaxed mb-8 max-w-sm">
-                    Более 15 лет создаём диваны, кровати и кресла. Собственная заготовка древесины, точность ЧПУ-кроя и полный цикл производства гарантируют безупречную эстетику.
-                </p>
-                <div class="flex flex-wrap items-center gap-4 mb-10">
-                    <button onclick="document.getElementById('catalog-container').scrollIntoView({behavior: 'smooth'})" class="bg-black text-white text-xs font-medium py-3.5 px-7 rounded-full hover:bg-zinc-800 transition shadow-md">Смотреть каталог</button>
-                </div>
+            <!-- Слайд 2 -->
+            <div class="hero-slide absolute inset-0 opacity-0 z-0">
+                <img src="images/sofa-ervin1.webp" alt="Диван Ervin" class="w-full h-full object-cover object-center">
+                <div class="absolute inset-0 bg-black/30"></div>
+            </div>
+            <!-- Слайд 3 -->
+            <div class="hero-slide absolute inset-0 opacity-0 z-0">
+                <img src="images/sofa-amster1.webp" alt="Диван Amster" class="w-full h-full object-cover object-center">
+                <div class="absolute inset-0 bg-black/30"></div>
             </div>
         </div>
-    </section>
 
-    <!-- Фильтры каталога -->
-    <div class="max-w-7xl w-full mx-auto mb-16 flex flex-wrap items-center justify-center gap-2 md:gap-4 bg-white p-2 rounded-full shadow-sm border border-zinc-100 fade-in-up delay-300">
+        <!-- ТЕКСТ ПОВЕРХ СЛАЙДЕРА -->
+        <div class="absolute inset-0 z-20 flex flex-col justify-center px-6 lg:px-12 max-w-[1400px] mx-auto pointer-events-none">
+            <div class="max-w-2xl fade-in-up">
+                <!-- ✏️ ТЕКСТ: Заголовок (<br> означает перенос строки) -->
+                <h1 class="text-white text-5xl md:text-7xl font-light tracking-tight leading-[1.1] mb-4 pointer-events-auto">
+                    Свежий взгляд<br>на комфорт
+                </h1>
+                <!-- ✏️ ТЕКСТ: Подзаголовок -->
+                <p class="text-white/90 text-lg md:text-xl font-light mb-8 pointer-events-auto">
+                    Кресла, в которых лето задержится надолго
+                </p>
+                <button onclick="document.getElementById('catalog-container').scrollIntoView({behavior: 'smooth'})" class="bg-white text-black text-sm md:text-base font-medium py-3.5 px-10 rounded-full hover:bg-zinc-100 transition shadow-lg pointer-events-auto">
+                    Смотреть каталог
+                </button>
+            </div>
+        </div>
+
+        <!-- КНОПКИ УПРАВЛЕНИЯ СЛАЙДЕРОМ (Лучше не трогать) -->
+        <div class="absolute bottom-8 left-0 w-full flex justify-center gap-3 z-30 pointer-events-auto">
+            <button class="hero-dot w-2 h-2 rounded-full bg-white transition-all"></button>
+            <button class="hero-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/80 transition-all"></button>
+            <button class="hero-dot w-2 h-2 rounded-full bg-white/40 hover:bg-white/80 transition-all"></button>
+        </div>
+        <div class="absolute bottom-6 right-6 md:right-12 flex gap-4 z-30 pointer-events-auto">
+            <button id="hero-prev" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-black transition backdrop-blur-sm cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <button id="hero-next" class="w-10 h-10 rounded-full border border-white/40 flex items-center justify-center text-white hover:bg-white hover:text-black transition backdrop-blur-sm cursor-pointer">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7"/></svg>
+            </button>
+        </div>
+    </section>
+    <!-- === КОНЕЦ БЛОКА: БОЛЬШОЙ СЛАЙДЕР === -->
+
+    <!-- === НАЧАЛО БЛОКА: ФИЛЬТРЫ КАТАЛОГА === -->
+    <div class="max-w-7xl w-full mx-auto mb-16 flex flex-wrap items-center justify-center gap-2 md:gap-4 bg-white p-2 rounded-full shadow-sm border border-zinc-100 reveal-on-scroll">
+        <!-- ⚙️ НАСТРОЙКА ФИЛЬТРОВ: Атрибут data-category указывает, какие товары показывать при клике.
+             Например, data-category="Диваны,Прямые диваны" покажет все товары, у которых в админке прописана категория "Диваны" или "Прямые диваны". -->
         <button class="filter-btn text-sm tracking-tight font-medium text-black bg-zinc-100 px-6 py-2.5 rounded-full transition-all duration-200" data-category="all">Все модели</button>
         <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Диваны,Прямые диваны,Модульные диваны,Диваны-кровати">Диваны</button>
         <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Кресла,Индивидуальные кресла">Кресла</button>
         <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Пуфы,Банкетки и пуфы">Пуфы</button>
     </div>
+    <!-- === КОНЕЦ БЛОКА: ФИЛЬТРЫ === -->
 
-    <!-- Контейнер каталога (Сюда генерируются карточки товаров) -->
+    <!-- === НАЧАЛО БЛОКА: КАТАЛОГ === -->
+    <!-- ВНИМАНИЕ: Сюда скрипт автоматически загружает карточки из базы данных (Firebase). Не удаляй этот блок! -->
     <div id="catalog-container" class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-12 pb-16">
     </div>
+    <!-- === КОНЕЦ БЛОКА: КАТАЛОГ === -->
 
-    <!-- Информационный блок с анимацией скролла -->
+    <!-- === НАЧАЛО БЛОКА: ПРЕИМУЩЕСТВА (Стандарты качества) === -->
+    <!-- Если этот блок не нужен, удали отсюда и до КОНЕЦ БЛОКА: ПРЕИМУЩЕСТВА -->
     <div class="max-w-7xl w-full mx-auto mt-16 border-t border-gray-100 pt-16 px-4 sm:px-6 lg:px-12 reveal-on-scroll">
         <div class="max-w-3xl mb-12">
+            <!-- ✏️ ТЕКСТ: Заголовки блока преимуществ -->
             <span class="text-xs font-semibold tracking-widest text-[#E63946] uppercase block mb-3">Стандарты качества</span>
             <h2 class="text-3xl md:text-4xl font-light text-zinc-900 tracking-tight leading-tight">
-                Почему искушенные клиенты выбирают фабрику «Центр Мебель»
+                Почему клиенты выбирают фабрику «Центр Мебель»
             </h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Карточка 1 -->
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Собственное производство</div>
                 <p class="text-zinc-500 text-xs font-light leading-relaxed">Мы сами заготавливаем и калибруем древесину, контролируя её сушку до идеальных 0% влажности. Это позволяет нам гарантировать монолитность каркаса.</p>
             </div>
+            <!-- Карточка 2 -->
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Честная цена за качество</div>
                 <p class="text-zinc-500 text-xs font-light leading-relaxed">В отличие от конкурентов, мы указываем стартовую цену за готовую к жизни, износостойкую ткань от 3-й категории. Никаких скрытых наценок.</p>
             </div>
+            <!-- Карточка 3 -->
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Ответственность за сроки</div>
                 <p class="text-zinc-500 text-xs font-light leading-relaxed">Каждый заказ сопровождается четким договором. Наша фабрика работает как часы, соблюдая заявленные сроки производства.</p>
             </div>
         </div>
     </div>
+    <!-- === КОНЕЦ БЛОКА: ПРЕИМУЩЕСТВА === -->
 
-    <!-- Модальное окно товара -->
+    <!-- === НАЧАЛО БЛОКА: ТЕМНЫЙ ПОДВАЛ (FOOTER) === -->
+    <footer class="bg-[#1f1f1f] text-zinc-400 mt-24 pt-16 pb-12 text-[13px] font-light tracking-wide border-t-8 border-[#fcfcfc]">
+        <div class="max-w-[1500px] mx-auto px-6 lg:px-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
+                
+                <!-- КОЛОНКА 1 -->
+                <div class="flex flex-col gap-10">
+                    <div>
+                        <h4 class="text-white font-medium text-sm mb-6 tracking-normal">О компании</h4>
+                        <ul class="space-y-3.5">
+                            <!-- 🔗 КАК ДОБАВИТЬ ССЫЛКУ В ПОДВАЛЕ:
+                                 Замени href="#" на свой файл или сайт. 
+                                 Примеры:
+                                 1. Ссылка на другую HTML страницу (которую ты создашь): href="rekviziti.html"
+                                 2. Ссылка на загруженный документ (PDF): href="docs/rekviziti.pdf"
+                                 3. Ссылка на внешний сайт: href="https://vk.com/твой_профиль" target="_blank"
+                                 (Атрибут target="_blank" заставит ссылку открыться в новой вкладке).
+                            -->
+                            <li><a href="#" class="hover:text-white transition-colors duration-200">Реквизиты</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors duration-200">Охрана труда</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-medium text-sm mb-6 tracking-normal">Магазины</h4>
+                        <ul class="space-y-3.5">
+                            <li><a href="#" class="hover:text-white transition-colors duration-200">Курск, ул. Ленина 12</a></li>
+                            <!-- Если пункт не нужен, просто удали тег <li> целиком: от <li> до </li> -->
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- КОЛОНКА 2 -->
+                <div class="flex flex-col gap-10">
+                    <div>
+                        <h4 class="text-white font-medium text-sm mb-6 tracking-normal">Информация</h4>
+                        <ul class="space-y-3.5">
+                            <!-- Пример ссылки на файл: href="policy.pdf" -->
+                            <li><a href="#" class="hover:text-white transition-colors duration-200">Информация для потребителей</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors duration-200">Сотрудничество</a></li>
+                            <li><a href="#" class="hover:text-white transition-colors duration-200">Политика конфиденциальности</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-medium text-sm mb-2 tracking-normal">8 (800) 770-07-85</h4>
+                        <p class="text-xs text-zinc-500 mb-5">с 09:00 до 21:00 (по московскому времени)</p>
+                        <ul class="space-y-3.5">
+                            <!-- Ссылка на почту: href="mailto:твой@email.ru" -->
+                            <li><a href="mailto:info@centrmebel.ru" class="hover:text-white transition-colors duration-200">info@centrmebel.ru</a></li>
+                            <!-- Ссылка на Телеграм: href="https://t.me/твой_ник" -->
+                            <li><a href="https://t.me/test" class="hover:text-white transition-colors duration-200">Написать в Telegram</a></li>
+                            <!-- Ссылка на WhatsApp: href="https://wa.me/79991234567" -->
+                            <li><a href="https://wa.me/79000000000" class="hover:text-white transition-colors duration-200">Написать в WhatsApp</a></li>
+                        </ul>
+                        
+                        <!-- БЛОК СОЦСЕТЕЙ -->
+                        <h4 class="text-white font-medium text-sm mt-8 mb-4 tracking-normal">Мы в социальных сетях</h4>
+                        <div class="flex gap-3">
+                            <a href="#" class="w-9 h-9 rounded flex items-center justify-center border border-zinc-700 hover:border-white hover:text-white transition duration-200">
+                                <span class="font-bold text-[10px]">VK</span>
+                            </a>
+                            <a href="#" class="w-9 h-9 rounded flex items-center justify-center border border-zinc-700 hover:border-white hover:text-white transition duration-200">
+                                <span class="font-bold text-[10px]">TG</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- КОЛОНКА 3 -->
+                <div>
+                    <h4 class="text-white font-medium text-sm mb-6 tracking-normal">Покупателям</h4>
+                    <ul class="space-y-3.5">
+                        <!-- Сюда можешь вставить ссылки на страницы с текстом -->
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Гарантии и возврат</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Способы оплаты</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Условия доставки</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Публичная оферта</a></li>
+                    </ul>
+                </div>
+
+                <!-- КОЛОНКА 4 -->
+                <div>
+                    <h4 class="text-white font-medium text-sm mb-6 tracking-normal">Полезное</h4>
+                    <ul class="space-y-3.5">
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Блог</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Портфолио</a></li>
+                        <li><a href="#" class="hover:text-white transition-colors duration-200">Рекомендации по уходу</a></li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </footer>
+    <!-- === КОНЕЦ БЛОКА: ТЕМНЫЙ ПОДВАЛ === -->
+
+    <!-- === НАЧАЛО БЛОКА: МОДАЛЬНОЕ ОКНО ТОВАРА === -->
+    <!-- Всплывающее окно, которое открывается при клике на карточку. Структура заполняется автоматически из базы, здесь только визуальный "скелет" -->
     <div id="product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden opacity-0 transition-opacity duration-300 ease-out" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(15px);">
         <div class="min-h-screen flex items-center justify-center p-4 md:p-8">
             <div class="bg-white max-w-6xl w-full rounded-3xl shadow-2xl overflow-hidden relative transform scale-95 transition-transform duration-300 ease-out flex flex-col md:flex-row">
                 
+                <!-- КНОПКА ЗАКРЫТИЯ (КРЕСТИК) -->
                 <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-zinc-100/80 hover:bg-zinc-200 rounded-full flex items-center justify-center transition cursor-pointer text-zinc-800">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
 
+                <!-- ЛЕВАЯ ЧАСТЬ МОДАЛКИ (ФОТО) -->
                 <div class="w-full md:w-1/2 bg-zinc-50 flex flex-col items-center justify-center p-8 min-h-[400px] md:min-h-[600px] relative group">
                     <div class="w-full flex-1 flex items-center justify-center relative overflow-hidden">
                         <img id="modal-img" src="" alt="" class="max-w-full max-h-[450px] object-contain transition-all duration-300">
-                        <button id="gallery-prev" class="absolute left-2 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-                        </button>
-                        <button id="gallery-next" class="absolute right-2 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-                        </button>
+                        <!-- СТРЕЛКИ ВЛЕВО-ВПРАВО -->
+                        <button id="gallery-prev" class="absolute left-2 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg></button>
+                        <button id="gallery-next" class="absolute right-2 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></button>
                     </div>
                     <div id="gallery-dots" class="flex items-center justify-center gap-2 mt-6"></div>
                 </div>
 
+                <!-- ПРАВАЯ ЧАСТЬ МОДАЛКИ (ТЕКСТ) -->
                 <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-between border-l border-zinc-100 max-h-[600px] overflow-y-auto">
                     <div class="flex flex-col gap-4">
                         <span id="modal-category" class="text-xs font-semibold tracking-widest text-zinc-400 uppercase"></span>
                         <h2 id="modal-name" class="text-3xl font-light text-zinc-900 tracking-tight"></h2>
                         <div id="modal-price" class="text-xl font-medium text-zinc-900 mb-2"></div>
-                        
-                        <!-- Блок описания -->
                         <div id="modal-description" class="text-zinc-500 text-sm font-light leading-relaxed mb-2"></div>
                         
                         <hr class="border-zinc-100">
                         
+                        <!-- ВКЛАДКИ (ТАБЫ) -->
                         <div class="w-full mt-2">
                             <div class="flex border-b border-zinc-100 gap-6 text-[11px] uppercase tracking-wider font-semibold mb-5 overflow-x-auto pb-1">
+                                <!-- ✏️ ТЕКСТ: Названия вкладок в карточке -->
                                 <button class="modal-tab-link text-black border-b-2 border-black pb-2" data-modal-tab="modal-specs">Характеристики</button>
                                 <button class="modal-tab-link text-zinc-400 pb-2 border-b-2 border-transparent hover:text-zinc-600 transition" data-modal-tab="modal-tech">Конструкция</button>
                                 <button class="modal-tab-link text-zinc-400 pb-2 border-b-2 border-transparent hover:text-zinc-600 transition" data-modal-tab="modal-service">Сервис</button>
@@ -237,12 +316,16 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <!-- КНОПКИ В МОДАЛКЕ -->
                     <div class="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-zinc-100">
                         <a id="modal-ozon-btn" href="" target="_blank" class="w-full sm:w-1/2 bg-[#005BFF] hover:bg-blue-700 text-white text-center text-xs font-semibold py-4 px-6 rounded-xl transition shadow-sm flex items-center justify-center gap-2">
-                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                            <!-- ✏️ ТЕКСТ: Название кнопки OZON -->
                             Купить на OZON
                         </a>
-                        <button onclick="alert('Чат в разработке')" class="w-full sm:w-1/2 border-2 border-zinc-200 hover:border-zinc-900 bg-transparent text-zinc-800 text-center text-xs font-semibold py-4 px-6 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                        <!-- 🔗 ССЫЛКА НА КОНСУЛЬТАЦИЮ: Замени onclick="alert('...')" на нужный скрипт чата или замени весь тег <button> на тег <a> со ссылкой на WhatsApp -->
+                        <button onclick="alert('Свяжитесь с нами по телефону +7 (4712) 55-55-55')" class="w-full sm:w-1/2 border-2 border-zinc-200 hover:border-zinc-900 bg-transparent text-zinc-800 text-center text-xs font-semibold py-4 px-6 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                            <!-- ✏️ ТЕКСТ: Название кнопки консультации -->
                             Получить консультацию
                         </button>
                     </div>
@@ -250,23 +333,55 @@
             </div>
         </div>
     </div>
+    <!-- === КОНЕЦ БЛОКА: МОДАЛЬНОЕ ОКНО === -->
 
-    <!-- Firebase Logic и Настройка IntersectionObserver -->
+    <!-- === НАЧАЛО БЛОКА: СКРИПТЫ (JS) === -->
+    <!-- Здесь логика работы слайдера, выгрузки товаров из БД и анимаций. Не редактируй без знания JavaScript! -->
     <script>
+        // ЛОГИКА HERO СЛАЙДЕРА
+        let currentHeroSlide = 0;
+        const heroSlides = document.querySelectorAll('.hero-slide');
+        const heroDots = document.querySelectorAll('.hero-dot');
+        let heroInterval;
+
+        function showHeroSlide(index) {
+            heroSlides[currentHeroSlide].classList.replace('opacity-100', 'opacity-0');
+            heroSlides[currentHeroSlide].classList.replace('z-10', 'z-0');
+            heroDots[currentHeroSlide].classList.replace('bg-white', 'bg-white/40');
+            
+            currentHeroSlide = index;
+            
+            heroSlides[currentHeroSlide].classList.replace('opacity-0', 'opacity-100');
+            heroSlides[currentHeroSlide].classList.replace('z-0', 'z-10');
+            heroDots[currentHeroSlide].classList.replace('bg-white/40', 'bg-white');
+        }
+
+        function nextHeroSlide() { showHeroSlide((currentHeroSlide + 1) % heroSlides.length); }
+        function prevHeroSlide() { showHeroSlide((currentHeroSlide - 1 + heroSlides.length) % heroSlides.length); }
+
+        document.getElementById('hero-next').addEventListener('click', () => { nextHeroSlide(); resetHeroInterval(); });
+        document.getElementById('hero-prev').addEventListener('click', () => { prevHeroSlide(); resetHeroInterval(); });
+        heroDots.forEach((dot, idx) => {
+            dot.addEventListener('click', () => { showHeroSlide(idx); resetHeroInterval(); });
+        });
+
+        function resetHeroInterval() {
+            clearInterval(heroInterval);
+            heroInterval = setInterval(nextHeroSlide, 5000);
+        }
+        heroInterval = setInterval(nextHeroSlide, 5000);
+
+        // БАЗА ДАННЫХ И КАТАЛОГ
         const FIREBASE_URL = "https://centermebel-43737-default-rtdb.europe-west1.firebasedatabase.app"; 
         let PRODUCTS_DATA = [];
 
-        // Настройка обозревателя для анимации карточек при скролле
-        const scrollObserverOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.15 // Элемент начнет появляться, когда 15% его будет видно
-        };
+        // Анимация при скролле
+        const scrollObserverOptions = { root: null, rootMargin: '0px', threshold: 0.15 };
         const scrollObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('is-visible');
-                    observer.unobserve(entry.target); // Анимируем только один раз
+                    observer.unobserve(entry.target); 
                 }
             });
         }, scrollObserverOptions);
@@ -277,7 +392,7 @@
                 const data = await response.json();
                 
                 if (data) {
-                    PRODUCTS_DATA = Object.values(data);
+                    PRODUCTS_DATA = Array.isArray(data) ? data.filter(i=>i) : Object.values(data);
                     renderCatalog("all");
                 }
             } catch (error) { console.error("Ошибка:", error); }
@@ -300,13 +415,10 @@
                     : { mainImage: product.mainImage, colorName: 'Базовый', colorHex: '#000' };
 
                 const productCard = document.createElement('div');
-                // Добавляем класс reveal-on-scroll к каждой карточке
                 productCard.className = "premium-card skeleton cursor-pointer reveal-on-scroll";
                 productCard.id = `card-${product.id}`;
 
-                // Вся карточка кликабельна для открытия модалки
                 productCard.addEventListener('click', (e) => {
-                    // Игнорируем клик, если нажата именно кнопка Ozon
                     if (e.target.closest('a')) return;
                     openModal(product);
                 });
@@ -333,12 +445,11 @@
                     </div>
                 `;
                 container.appendChild(productCard);
-                // Наблюдаем за карточкой для анимации скролла
                 scrollObserver.observe(productCard);
             });
         }
 
-        // Логика модального окна и галереи
+        // ЛОГИКА МОДАЛЬНОГО ОКНА
         let currentImageArray = [];
         let currentImageIndex = 0;
         const modal = document.getElementById('product-modal');
@@ -356,7 +467,6 @@
             document.getElementById('modal-price').textContent = product.price || 'Цена по запросу';
             document.getElementById('modal-ozon-btn').href = product.ozonLink || '#';
             
-            // Вставляем описание
             const descBlock = document.getElementById('modal-description');
             if (product.description) {
                 descBlock.innerHTML = product.description;
@@ -369,7 +479,6 @@
             document.getElementById('modal-tech').innerHTML = product.tabs?.tech || '<p class="text-zinc-400">Нет данных</p>';
             document.getElementById('modal-service').innerHTML = product.tabs?.service || '<p class="text-zinc-400">Нет данных</p>';
 
-            // Палитра цветов
             const modalSpecsBlock = document.getElementById('modal-specs');
             const oldSwatches = document.getElementById('modal-swatches-container');
             if(oldSwatches) oldSwatches.remove();
@@ -383,7 +492,6 @@
                     <div class="flex flex-wrap items-center gap-3" id="modal-swatches"></div>
                 `;
                 
-                // Вставляем блок цветов перед вкладками (или в начало модалки)
                 descBlock.parentNode.insertBefore(colorBlock, descBlock.nextSibling);
 
                 const swatchesContainer = document.getElementById('modal-swatches');
@@ -413,7 +521,7 @@
 
             function buildDots() {
                 dotsContainer.innerHTML = '';
-                if(currentImageArray.length <= 1) return; // Не показываем точки, если фото одно
+                if(currentImageArray.length <= 1) return; 
                 
                 currentImageArray.forEach((_, idx) => {
                     const dot = document.createElement('div');
@@ -445,7 +553,7 @@
             if(!currentImageArray || currentImageArray.length === 0) return;
             
             modalImg.classList.remove('slide-animate');
-            void modalImg.offsetWidth; // Триггер рефлоу для перезапуска анимации
+            void modalImg.offsetWidth; 
             
             modalImg.src = currentImageArray[currentImageIndex];
             modalImg.classList.add('slide-animate');
@@ -459,7 +567,6 @@
                 }
             });
             
-            // Скрываем стрелки, если фото только одно
             document.getElementById('gallery-prev').style.display = currentImageArray.length > 1 ? 'flex' : 'none';
             document.getElementById('gallery-next').style.display = currentImageArray.length > 1 ? 'flex' : 'none';
         }
@@ -487,7 +594,6 @@
             if (e.target === modal || e.target.classList.contains('min-h-screen')) closeModal();
         });
 
-        // ЛОГИКА ТАБОВ В МОДАЛКЕ
         const modalTabLinks = document.querySelectorAll('.modal-tab-link');
         const modalTabContents = document.querySelectorAll('.modal-tab-content');
 
@@ -506,7 +612,6 @@
             });
         });
 
-        // ФИЛЬТРЫ КАТЕГОРИЙ
         const filterButtons = document.querySelectorAll('.filter-btn');
         filterButtons.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -520,7 +625,6 @@
             });
         });
 
-        // Плавный эффект для шапки при скролле (и появление нижних инфо-блоков)
         window.addEventListener('scroll', function() {
             const header = document.getElementById('main-header');
             if (window.scrollY > 20) {
@@ -530,8 +634,8 @@
             }
         });
 
-        // Применяем observer к статичным блокам внизу страницы
         document.querySelectorAll('.reveal-on-scroll').forEach(el => scrollObserver.observe(el));
     </script>
+    <!-- === КОНЕЦ БЛОКА: СКРИПТЫ === -->
 </body>
 </html>
