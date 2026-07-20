@@ -2,49 +2,27 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Облачная панель управления — Центр Мебель</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; background-color: #f5f5f7; }</style>
 </head>
-<body class="py-12 px-4 sm:px-6 lg:px-8">
+<body class="py-12 px-4 bg-zinc-100">
 
-    <div class="max-w-4xl mx-auto">
-        <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 border-b border-zinc-200 pb-6 gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-[#E63946] rounded-full flex items-center justify-center text-white font-bold">ЦM</div>
-                <div>
-                    <h1 class="text-xl font-medium text-zinc-900 leading-none">Облачный конструктор</h1>
-                    
-                </div>
-            </div>
-            
-            
-        </div>
+    <div class="max-w-4xl mx-auto bg-white p-8 rounded-3xl shadow-sm">
+        <h1 class="text-2xl font-bold mb-6">Облачный конструктор каталога</h1>
+        
+        <div id="loading" class="hidden text-sm text-zinc-500 mb-4">Загрузка данных...</div>
+        <div id="products-list" class="space-y-6"></div>
 
-        <div id="loading" class="hidden text-center py-10 text-zinc-500 text-sm animate-pulse">Связываемся с облаком...</div>
-
-        <div class="space-y-6" id="products-list"></div>
-
-        <button onclick="addNewProductForm()" class="w-full mt-6 border-2 border-dashed border-zinc-300 hover:border-zinc-500 bg-white text-zinc-600 hover:text-zinc-900 text-sm font-medium py-5 rounded-2xl transition flex items-center justify-center gap-2">
-            + Добавить новую модель мебели
-        </button>
-
-        <button onclick="saveToCloud()" class="w-full mt-8 bg-[#E63946] hover:bg-red-700 text-white text-sm font-medium py-5 rounded-2xl transition shadow-lg shadow-red-500/30 flex items-center justify-center gap-2">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
-            Сохранить изменения в Облако
-        </button>
+        <button onclick="addNewProductForm()" class="mt-8 w-full py-4 border-2 border-dashed border-zinc-300 rounded-2xl text-zinc-500 hover:border-[#E63946] hover:text-[#E63946] transition">+ Добавить новую модель мебели</button>
+        <button onclick="saveToCloud(this)" class="mt-4 w-full py-4 bg-[#E63946] text-white rounded-2xl font-bold hover:bg-rose-600 transition">Сохранить изменения в Облако</button>
     </div>
 
-    <script>
-    // ВСТАВЬ СЮДА ССЫЛКУ НА СВОЮ FIREBASE БАЗУ (без /products.json в конце)
+<script>
+    // ВСТАВЬТЕ СЮДА СВОЮ ССЫЛКУ ИЗ FIREBASE
     const FIREBASE_URL = "https://centermebel-43737-default-rtdb.europe-west1.firebasedatabase.app/"; 
+    let productCount = 0;
 
-    window.onload = () => {
-        // При загрузке сразу тянем данные, так как в Firebase ключи не нужны
-        loadFromCloud();
-    };
+    window.onload = () => loadFromCloud();
 
     async function loadFromCloud() {
         document.getElementById('loading').classList.remove('hidden');
@@ -53,35 +31,75 @@
             const data = await response.json();
             document.getElementById('loading').classList.add('hidden');
             document.getElementById('products-list').innerHTML = '';
-            
-            if(data) {
-                // Превращаем объект из Firebase в массив и рисуем
-                Object.values(data).forEach(prod => addNewProductForm(prod));
-            }
-        } catch (err) { 
-            console.error(err);
-            alert('Ошибка загрузки базы. Проверьте URL в коде.'); 
-        }
+            if(data) Object.values(data).forEach(prod => addNewProductForm(prod));
+        } catch (err) { alert('Ошибка загрузки: ' + err.message); }
     }
 
-    async function saveToCloud() {
-        const btn = event.currentTarget;
+    async function saveToCloud(btn) {
         btn.innerHTML = 'Сохранение...';
-        
         const productsArray = collectDataFromForms();
-        
         try {
             const response = await fetch(`${FIREBASE_URL}/products.json`, {
                 method: 'PUT',
                 body: JSON.stringify(productsArray)
             });
-            if(response.ok) alert('Успешно сохранено в Firebase!');
-        } catch(e) { alert('Ошибка сохранения: ' + e.message); }
-        
+            if(response.ok) alert('Успешно сохранено!');
+        } catch(e) { alert('Ошибка: ' + e.message); }
         btn.innerHTML = 'Сохранить изменения в Облако';
     }
 
-    // ... (функции addNewProductForm, addVariantField и collectDataFromForms оставляем как были)
+    function addNewProductForm(data = null) {
+        productCount++;
+        const container = document.getElementById('products-list');
+        const card = document.createElement('div');
+        card.className = "p-6 border rounded-2xl bg-zinc-50 relative";
+        card.id = `card-${productCount}`;
+        card.innerHTML = `
+            <button onclick="this.parentElement.remove()" class="absolute top-4 right-4 text-xs text-rose-500">Удалить</button>
+            <div class="grid grid-cols-2 gap-4">
+                <input type="text" class="prod-name p-2 border rounded" placeholder="Название" value="${data ? data.name : ''}">
+                <input type="text" class="prod-price p-2 border rounded" placeholder="Цена" value="${data ? data.price : ''}">
+                <input type="text" class="prod-ozon p-2 border rounded" placeholder="Ссылка Ozon" value="${data ? data.ozonLink : ''}">
+            </div>
+            <div class="variants-container mt-4 space-y-2"></div>
+            <button onclick="addVariantField(${productCount})" class="mt-2 text-xs text-[#E63946] font-bold">+ Цвет</button>
+        `;
+        container.appendChild(card);
+        if(data && data.variants) data.variants.forEach(v => addVariantField(productCount, v));
+    }
+
+    function addVariantField(id, val = null) {
+        const cont = document.querySelector(`#card-${id} .variants-container`);
+        const div = document.createElement('div');
+        div.className = "flex gap-2";
+        div.innerHTML = `
+            <input type="text" class="var-name p-1 border rounded w-1/3" placeholder="Цвет" value="${val ? val.colorName : ''}">
+            <input type="text" class="var-hex p-1 border rounded w-1/3" placeholder="HEX" value="${val ? val.colorHex : ''}">
+            <input type="text" class="var-images p-1 border rounded w-1/3" placeholder="Фото" value="${val ? val.thumbnails.join(', ') : ''}">
+        `;
+        cont.appendChild(div);
+    }
+
+    function collectDataFromForms() {
+        let list = [];
+        document.querySelectorAll('#products-list > div').forEach(card => {
+            let vars = [];
+            card.querySelectorAll('.variants-container > div').forEach(row => {
+                vars.push({
+                    colorName: row.querySelector('.var-name').value,
+                    colorHex: row.querySelector('.var-hex').value,
+                    thumbnails: row.querySelector('.var-images').value.split(',').map(s => s.trim())
+                });
+            });
+            list.push({
+                name: card.querySelector('.prod-name').value,
+                price: card.querySelector('.prod-price').value,
+                ozonLink: card.querySelector('.prod-ozon').value,
+                variants: vars
+            });
+        });
+        return list;
+    }
 </script>
 </body>
 </html>
