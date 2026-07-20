@@ -52,23 +52,36 @@
         };
 
         // ЗАГРУЗКА ИЗ ОБЛАКА
-        async function loadFromCloud() {
-    const binId = document.getElementById('bin-id').value.trim();
-    const apiKey = document.getElementById('api-key').value.trim();
-    
-    if(!binId || !apiKey) return alert('Введите Bin ID и Master Key!');
+        // Замените эту переменную на вашу ссылку из Firebase
+const FIREBASE_URL = "https://console.firebase.google.com/u/0/project/centermebel-43737/database/centermebel-43737-default-rtdb/data/~2F"; 
 
-    localStorage.setItem('cm_bin_id', binId);
-    localStorage.setItem('cm_api_key', apiKey);
-
+async function loadFromCloud() {
     document.getElementById('loading').classList.remove('hidden');
-
     try {
-        const response = await fetch(`https://api.jsonbin.io/v3/b/${binId}/latest`, {
-            method: 'GET',
-            headers: {
-                'X-Master-Key': apiKey // Ключ обязателен для авторизации
-            }
+        const response = await fetch(`${FIREBASE_URL}/products.json`);
+        const data = await response.json();
+        document.getElementById('loading').classList.add('hidden');
+        document.getElementById('products-list').innerHTML = '';
+        if(data) {
+            // Firebase возвращает данные объектом, превращаем в массив
+            Object.values(data).forEach(prod => addNewProductForm(prod));
+        }
+    } catch (err) { alert('Ошибка загрузки: ' + err.message); }
+}
+
+async function saveToCloud(btnElement) {
+    btnElement.innerHTML = 'Сохранение...';
+    const productsArray = collectDataFromForms();
+    try {
+        // Метод PUT перезаписывает всю базу целиком
+        await fetch(`${FIREBASE_URL}/products.json`, {
+            method: 'PUT',
+            body: JSON.stringify(productsArray)
+        });
+        alert('Данные успешно сохранены в Firebase!');
+    } catch(e) { alert('Ошибка: ' + e.message); }
+    btnElement.innerHTML = 'Сохранить изменения в Облако';
+}
         });
         
         const data = await response.json();
