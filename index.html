@@ -19,7 +19,7 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ (APPLE STYLE) */
+        /* АНИМАЦИИ ПОЯВЛЕНИЯ ПРИ ЗАГРУЗКЕ СТРАНИЦЫ */
         .fade-in-up {
             opacity: 0;
             transform: translateY(30px);
@@ -33,6 +33,8 @@
         .delay-300 { animation-delay: 0.3s; }
         .delay-400 { animation-delay: 0.4s; }
         .delay-500 { animation-delay: 0.5s; }
+        .delay-600 { animation-delay: 0.6s; }
+        .delay-700 { animation-delay: 0.7s; }
 
         /* КЛАССЫ ДЛЯ КАРТОЧЕК */
         .premium-card {
@@ -75,6 +77,19 @@
         .premium-card:hover .card-image-bg { transform: scale(1.08); }
         .premium-card:hover .card-content-block { transform: translateY(0); opacity: 1; }
 
+        /* АНИМАЦИЯ ДЛЯ СЛАЙДОВ В МОДАЛКЕ (FADE-IN + SLIDE-UP) */
+        .slide-animate {
+            opacity: 0;
+            transform: translateY(15px) scale(0.98);
+            animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        }
+        @keyframes slideUpFade {
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         @keyframes pulse-bg {
             0%, 100% { background-color: #e5e7eb; }
             50% { background-color: #d1d5db; }
@@ -109,7 +124,6 @@
     </header>
 
     <section class="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-12 lg:py-16 mb-8 fade-in-up delay-200">
-        
         <div class="w-full relative rounded-[32px] overflow-hidden bg-white shadow-xl flex items-center min-h-[440px] md:min-h-[500px]">
             
             <div class="absolute top-0 right-0 h-full w-full md:w-[65%] z-10">
@@ -119,7 +133,6 @@
             <div class="w-full md:w-[50%] h-full p-10 md:p-16 z-20 flex flex-col items-start justify-center relative min-h-[440px] md:min-h-[500px]">
                 
                 <div class="absolute inset-0 -z-10 hidden md:block backdrop-blur-xl bg-gradient-to-r from-white via-white/95 via-[75%] to-white/0" style="mask-image: linear-gradient(to right, black 65%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 65%, transparent 100%);"></div>
-                
                 <div class="absolute inset-0 -z-10 block md:hidden bg-gradient-to-t from-white via-white/90 to-transparent backdrop-blur-md"></div>
 
                 <span class="text-[11px] font-bold tracking-widest text-[#E63946] uppercase mb-4 fade-in-up delay-300">Собственное производство</span>
@@ -156,18 +169,10 @@
     </section>
 
     <div class="max-w-7xl w-full mx-auto mb-16 flex flex-wrap items-center justify-center gap-2 md:gap-4 bg-white p-2 rounded-full shadow-sm border border-zinc-100 fade-in-up delay-500">
-        <button class="filter-btn text-sm tracking-tight font-medium text-black bg-zinc-100 px-6 py-2.5 rounded-full transition-all duration-200" data-category="all">
-            Все модели
-        </button>
-        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Прямые диваны,Модульные диваны,Диваны-кровати">
-            Диваны
-        </button>
-        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Индивидуальные кресла">
-            Кресла
-        </button>
-        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Банкетки и пуфы">
-            Пуфы
-        </button>
+        <button class="filter-btn text-sm tracking-tight font-medium text-black bg-zinc-100 px-6 py-2.5 rounded-full transition-all duration-200" data-category="all">Все модели</button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Прямые диваны,Модульные диваны,Диваны-кровати">Диваны</button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Индивидуальные кресла">Кресла</button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Банкетки и пуфы">Пуфы</button>
     </div>
 
     <div id="catalog-container" class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-12 pb-16 fade-in-up delay-500">
@@ -180,7 +185,6 @@
                 Почему искушенные клиенты выбирают фабрику «Центр мебель»
             </h2>
         </div>
-
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Собственное производство</div>
@@ -208,7 +212,6 @@
             <span class="text-xs font-semibold tracking-widest text-[#E63946] uppercase block mb-2">Часто задаваемые вопросы</span>
             <h2 class="text-3xl font-light text-zinc-900 tracking-tight">Отвечаем на то, что действительно важно</h2>
         </div>
-
         <div class="space-y-4">
             <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6 shadow-sm">
                 <h4 class="text-sm font-medium text-zinc-900 mb-2">Как упаковывается мебель при доставке в регионы?</h4>
@@ -235,11 +238,11 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
             <div class="flex flex-col gap-4">
                 <div class="flex items-center gap-2">
-                    <div class="w-8 h-8 bg-[#E63946] rounded-full flex items-center justify-center text-white font-bold text-sm tracking-tighter">LM</div>
+                    <img src="logo.png" alt="Центр Мебель" class="w-10 h-10 object-contain drop-shadow-sm">
                     <div class="text-lg font-medium tracking-tight text-black">Центр Мебель</div>
                 </div>
                 <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Собственное производство дизайнерской мягкой мебели из отборной, правильно высушенной березовой древесины.
+                    Собственное производство дизайнерской мягкой мебели из отборной, правильно высушенной березовой древесины. Создаем комфорт, который служит поколениям.
                 </p>
             </div>
             <div class="flex flex-col gap-3">
@@ -513,20 +516,20 @@
         const dotsContainer = document.getElementById('gallery-dots');
 
         function updateModalImage() {
-            modalImg.style.opacity = '0';
-            setTimeout(() => {
-                modalImg.src = currentImageArray[currentImageIndex];
-                modalImg.style.opacity = '1';
-                
-                const dots = dotsContainer.querySelectorAll('div');
-                dots.forEach((dot, idx) => {
-                    if (idx === currentImageIndex) {
-                        dot.className = "w-6 h-1.5 rounded-full bg-zinc-900 transition-all duration-300";
-                    } else {
-                        dot.className = "w-1.5 h-1.5 rounded-full bg-zinc-300 transition-all duration-300";
-                    }
-                });
-            }, 150);
+            modalImg.classList.remove('slide-animate');
+            void modalImg.offsetWidth; // Принудительный рестарт анимации
+            
+            modalImg.src = currentImageArray[currentImageIndex];
+            modalImg.classList.add('slide-animate');
+            
+            const dots = dotsContainer.querySelectorAll('div');
+            dots.forEach((dot, idx) => {
+                if (idx === currentImageIndex) {
+                    dot.className = "w-6 h-1.5 rounded-full bg-zinc-900 transition-all duration-300";
+                } else {
+                    dot.className = "w-1.5 h-1.5 rounded-full bg-zinc-300 transition-all duration-300";
+                }
+            });
         }
 
         document.getElementById('gallery-prev').addEventListener('click', (e) => {
@@ -619,18 +622,17 @@
             });
         });
 
-        renderCatalog("all");
-		// Интеграция умной прозрачности для шапки
+        // Интеграция умной прозрачности для шапки
         window.addEventListener('scroll', function() {
             const header = document.getElementById('main-header');
             if (window.scrollY > 20) {
-                // При скролле вниз добавляем легкий размытый белый фон
                 header.classList.add('bg-[#fcfcfc]/80', 'backdrop-blur-md', 'shadow-sm');
             } else {
-                // В самом верху страницы панель полностью прозрачна
                 header.classList.remove('bg-[#fcfcfc]/80', 'backdrop-blur-md', 'shadow-sm');
             }
         });
+
+        renderCatalog("all");
     </script>
 
 </body>
