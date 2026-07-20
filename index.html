@@ -9,7 +9,7 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         html { scroll-behavior: smooth; }
@@ -31,10 +31,17 @@
         .delay-100 { animation-delay: 0.1s; }
         .delay-200 { animation-delay: 0.2s; }
         .delay-300 { animation-delay: 0.3s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-500 { animation-delay: 0.5s; }
-        .delay-600 { animation-delay: 0.6s; }
-        .delay-700 { animation-delay: 0.7s; }
+
+        /* АНИМАЦИИ ПРИ СКРОЛЛЕ (НОВОЕ) */
+        .reveal-on-scroll {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.25, 1, 0.5, 1), transform 0.8s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .reveal-on-scroll.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
         /* КЛАССЫ ДЛЯ КАРТОЧЕК */
         .premium-card {
@@ -42,8 +49,9 @@
             overflow: hidden;
             border-radius: 24px;
             aspect-ratio: 4 / 5;
-            transition: box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            transition: box-shadow 0.6s cubic-bezier(0.22, 1, 0.36, 1), transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
             background-color: white;
+            cursor: pointer;
         }
 
         .card-image-bg {
@@ -59,8 +67,9 @@
         .card-gradient-overlay {
             position: absolute;
             bottom: 0; left: 0; width: 100%; height: 60%;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.3) 50%, rgba(0,0,0,0) 100%);
+            background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%);
             z-index: 2;
+            transition: height 0.6s ease;
         }
 
         .card-content-block {
@@ -68,26 +77,27 @@
             bottom: 0; left: 0; width: 100%;
             padding: 40px;
             z-index: 3;
-            transform: translateY(30px);
-            opacity: 0;
+            transform: translateY(20px);
+            opacity: 0.9;
             transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
         }
 
-        .premium-card:hover { box-shadow: 0 30px 60px rgba(0,0,0,0.12); }
-        .premium-card:hover .card-image-bg { transform: scale(1.08); }
+        .premium-card:hover { 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.12); 
+            transform: translateY(-8px);
+        }
+        .premium-card:hover .card-image-bg { transform: scale(1.06); }
+        .premium-card:hover .card-gradient-overlay { height: 75%; }
         .premium-card:hover .card-content-block { transform: translateY(0); opacity: 1; }
 
-        /* АНИМАЦИЯ ДЛЯ СЛАЙДОВ В МОДАЛКЕ (FADE-IN + SLIDE-UP) */
+        /* АНИМАЦИЯ ДЛЯ СЛАЙДОВ В МОДАЛКЕ */
         .slide-animate {
             opacity: 0;
             transform: translateY(15px) scale(0.98);
             animation: slideUpFade 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
         }
         @keyframes slideUpFade {
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         @keyframes pulse-bg {
@@ -100,292 +110,140 @@
 <body class="min-h-screen">
 
     <header id="main-header" class="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-6 flex items-center justify-between sticky top-0 z-40 transition-all duration-300 ease-in-out fade-in-up">
-        <div class="flex items-center gap-4">
-            <img src="logo.png" alt="Центр Мебель" class="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm">
+        <!-- Кликабельный логотип (возврат на главную/наверх) -->
+        <a href="#" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;" class="flex items-center gap-4 group cursor-pointer">
+            <img src="logo.png" alt="Центр Мебель" class="w-12 h-12 md:w-14 md:h-14 object-contain drop-shadow-sm transition-transform duration-500 group-hover:scale-105">
             <div class="flex flex-col justify-center">
-                <span class="text-xl md:text-2xl font-medium tracking-tight text-zinc-900 leading-none">Центр Мебель</span>
+                <span class="text-xl md:text-2xl font-medium tracking-tight text-zinc-900 leading-none group-hover:text-[#E63946] transition-colors">Центр Мебель</span>
                 <span class="text-[9px] md:text-[10px] tracking-[0.15em] text-zinc-400 uppercase mt-1">Собственное производство</span>
             </div>
-        </div>
+        </a>
 
         <nav class="hidden lg:flex items-center gap-8">
             <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Диваны</a>
             <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Кровати</a>
             <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Кресла</a>
             <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Пуфы</a>
-            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Тахты</a>
-            <a href="#" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">Мягкие углы</a>
         </nav>
 
         <div class="hidden lg:flex items-center gap-6">
             <a href="tel:+74712555555" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition">+7 (4712) 55-55-55</a>
-            <a href="#catalog-container" class="bg-black text-white text-sm font-medium py-2.5 px-6 rounded-full hover:bg-zinc-800 transition shadow-md">Каталог</a>
+            <button onclick="document.getElementById('catalog-container').scrollIntoView({behavior: 'smooth'})" class="bg-black text-white text-sm font-medium py-2.5 px-6 rounded-full hover:bg-zinc-800 transition shadow-md">Каталог</button>
         </div>
     </header>
 
+    <!-- Баннер (оставлен без изменений для экономии места) -->
     <section class="w-full max-w-[1400px] mx-auto px-6 lg:px-12 py-12 lg:py-16 mb-8 fade-in-up delay-200">
         <div class="w-full relative rounded-[32px] overflow-hidden bg-white shadow-xl flex items-center min-h-[440px] md:min-h-[500px]">
-            
             <div class="absolute top-0 right-0 h-full w-full md:w-[65%] z-10">
                 <img src="images/hero-bed1.webp" alt="Центр Мебель — Премиальный комфорт" class="h-full w-full object-cover object-center">
             </div>
-
             <div class="w-full md:w-[50%] h-full p-10 md:p-16 z-20 flex flex-col items-start justify-center relative min-h-[440px] md:min-h-[500px]">
-                
                 <div class="absolute inset-0 -z-10 hidden md:block backdrop-blur-xl bg-gradient-to-r from-white via-white/95 via-[75%] to-white/0" style="mask-image: linear-gradient(to right, black 65%, transparent 100%); -webkit-mask-image: linear-gradient(to right, black 65%, transparent 100%);"></div>
                 <div class="absolute inset-0 -z-10 block md:hidden bg-gradient-to-t from-white via-white/90 to-transparent backdrop-blur-md"></div>
-
-                <span class="text-[11px] font-bold tracking-widest text-[#E63946] uppercase mb-4 fade-in-up delay-300">Собственное производство</span>
-                
-                <h1 class="text-4xl lg:text-[2.8rem] font-medium text-zinc-900 tracking-tight leading-[1.1] mb-5 fade-in-up delay-400">
+                <span class="text-[11px] font-bold tracking-widest text-[#E63946] uppercase mb-4">Собственное производство</span>
+                <h1 class="text-4xl lg:text-[2.8rem] font-medium text-zinc-900 tracking-tight leading-[1.1] mb-5">
                     Мебель, которая<br>становится частью дома
                 </h1>
-                
-                <p class="text-zinc-600 text-sm font-light leading-relaxed mb-8 max-w-sm fade-in-up delay-500">
+                <p class="text-zinc-600 text-sm font-light leading-relaxed mb-8 max-w-sm">
                     Более 15 лет создаём диваны, кровати и кресла. Собственная заготовка древесины, точность ЧПУ-кроя и полный цикл производства гарантируют безупречную эстетику.
                 </p>
-                
-                <div class="flex flex-wrap items-center gap-4 mb-10 fade-in-up delay-600">
-                    <a href="#catalog-container" class="bg-black text-white text-xs font-medium py-3.5 px-7 rounded-full hover:bg-zinc-800 transition shadow-md">
-                        Смотреть каталог
-                    </a>
-                    <button onclick="window.Bitrix24WidgetObject && window.Bitrix24WidgetObject.show()" class="bg-transparent border border-zinc-200 text-zinc-900 text-xs font-medium py-3.5 px-7 rounded-full hover:border-zinc-400 transition cursor-pointer">
-                        Заказать
-                    </button>
-                </div>
-                
-                <div class="flex items-start gap-8 fade-in-up delay-700">
-                    <div class="flex flex-col gap-0.5">
-                        <span class="text-2xl font-medium text-zinc-900">15+</span>
-                        <span class="text-[11px] text-zinc-500 font-light leading-snug">лет производства</span>
-                    </div>
-                    <div class="flex flex-col gap-0.5">
-                        <span class="text-2xl font-medium text-zinc-900">100%</span>
-                        <span class="text-[11px] text-zinc-500 font-light leading-snug">контроль качества</span>
-                    </div>
+                <div class="flex flex-wrap items-center gap-4 mb-10">
+                    <button onclick="document.getElementById('catalog-container').scrollIntoView({behavior: 'smooth'})" class="bg-black text-white text-xs font-medium py-3.5 px-7 rounded-full hover:bg-zinc-800 transition shadow-md">Смотреть каталог</button>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="max-w-7xl w-full mx-auto mb-16 flex flex-wrap items-center justify-center gap-2 md:gap-4 bg-white p-2 rounded-full shadow-sm border border-zinc-100 fade-in-up delay-500">
+    <!-- Фильтры каталога -->
+    <div class="max-w-7xl w-full mx-auto mb-16 flex flex-wrap items-center justify-center gap-2 md:gap-4 bg-white p-2 rounded-full shadow-sm border border-zinc-100 fade-in-up delay-300">
         <button class="filter-btn text-sm tracking-tight font-medium text-black bg-zinc-100 px-6 py-2.5 rounded-full transition-all duration-200" data-category="all">Все модели</button>
-        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Прямые диваны,Модульные диваны,Диваны-кровати">Диваны</button>
-        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Индивидуальные кресла">Кресла</button>
-        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Банкетки и пуфы">Пуфы</button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Диваны,Прямые диваны,Модульные диваны,Диваны-кровати">Диваны</button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Кресла,Индивидуальные кресла">Кресла</button>
+        <button class="filter-btn text-sm tracking-tight font-light text-zinc-600 hover:text-black hover:bg-zinc-50 px-6 py-2.5 rounded-full transition-all duration-200" data-category="Пуфы,Банкетки и пуфы">Пуфы</button>
     </div>
 
-    <div id="catalog-container" class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-12 pb-16 fade-in-up delay-500">
-        </div>
+    <!-- Контейнер каталога (Сюда генерируются карточки товаров) -->
+    <div id="catalog-container" class="max-w-7xl w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 px-4 sm:px-6 lg:px-12 pb-16">
+    </div>
 
-    <div class="max-w-7xl w-full mx-auto mt-16 border-t border-gray-100 pt-16 px-4 sm:px-6 lg:px-12">
+    <!-- Информационный блок с анимацией скролла -->
+    <div class="max-w-7xl w-full mx-auto mt-16 border-t border-gray-100 pt-16 px-4 sm:px-6 lg:px-12 reveal-on-scroll">
         <div class="max-w-3xl mb-12">
             <span class="text-xs font-semibold tracking-widest text-[#E63946] uppercase block mb-3">Стандарты качества</span>
             <h2 class="text-3xl md:text-4xl font-light text-zinc-900 tracking-tight leading-tight">
-                Why искушенные клиенты выбирают фабрику «Центр мебель»
+                Почему искушенные клиенты выбирают фабрику «Центр Мебель»
             </h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Собственное производство</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Мы сами заготавливаем и калибруем древесину, контролируя её сушку до идеальных 0% влажности. Это позволяет нам гарантировать монолитность каркаса и полное отсутствие скрипов на протяжении поколений.
-                </p>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">Мы сами заготавливаем и калибруем древесину, контролируя её сушку до идеальных 0% влажности. Это позволяет нам гарантировать монолитность каркаса.</p>
             </div>
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Честная цена за качество</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    В отличие от конкурентов, мы указываем стартовую цену за готовую к жизни, износостойкую ткань от 3-й категории. Никаких скрытых наценок, доплат за «базовую комплектацию» или техническую ткань.
-                </p>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">В отличие от конкурентов, мы указываем стартовую цену за готовую к жизни, износостойкую ткань от 3-й категории. Никаких скрытых наценок.</p>
             </div>
             <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm transition hover:shadow-md">
                 <div class="text-zinc-900 font-medium text-lg mb-3">Ответственность за сроки</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Каждый заказ сопровождается четким договором. Наша фабрика работает как часы, но если мы задержим производство хотя бы на один день — мы выплатим вам неустойку без лишних споров и проволочек.
-                </p>
+                <p class="text-zinc-500 text-xs font-light leading-relaxed">Каждый заказ сопровождается четким договором. Наша фабрика работает как часы, соблюдая заявленные сроки производства.</p>
             </div>
         </div>
     </div>
 
-    <div class="max-w-4xl w-full mx-auto mt-24 border-t border-gray-100 pt-16 px-4 sm:px-6">
-        <div class="text-center mb-12">
-            <span class="text-xs font-semibold tracking-widest text-[#E63946] uppercase block mb-2">Часто задаваемые вопросы</span>
-            <h2 class="text-3xl font-light text-zinc-900 tracking-tight">Отвечаем на то, что действительно важно</h2>
-        </div>
-        <div class="space-y-4">
-            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6 shadow-sm">
-                <h4 class="text-sm font-medium text-zinc-900 mb-2">Как упаковывается мебель при доставке в регионы?</h4>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Мы знаем, как легко повредить ткань. Каждый диван и кресло проходят многослойную консервацию: углы защищаются поролоновыми демпферами, затем мебель укутывается в пятислойный гофрокартон и запаивается во влагозащитную пленку.
-                </p>
-            </div>
-            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6 shadow-sm">
-                <h4 class="text-sm font-medium text-zinc-900 mb-2">Защитит ли ткань Easy Clean от когтей животных?</h4>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Наши ткани имеют маркировку Pet-friendly. Сверхплотное переплетение нитей лишено петель. Когти просто соскальзывают по поверхности, не оставляя зацепок, а шерсть легко удаляется обычным валиком.
-                </p>
-            </div>
-            <div class="bg-white border border-zinc-100 rounded-xl overflow-hidden p-6 shadow-sm">
-                <h4 class="text-sm font-medium text-zinc-900 mb-2">Есть ли у вашей мебели резкий химический запах?</h4>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Исключено. При фиксации слоев пены HR мы используем сертифицированные клеевые составы исключительно на водной основе. Мебель абсолютно безопасна для детей и аллергиков.
-                </p>
-            </div>
-        </div>
-    </div>
-
-    <div class="max-w-7xl w-full mx-auto mt-24 border-t border-gray-100 pt-16 px-4 sm:px-6 lg:px-12">
-        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-            <div>
-                <span class="text-xs font-semibold tracking-widest text-[#E63946] uppercase block mb-3">Нам доверяют</span>
-                <h2 class="text-3xl md:text-4xl font-light text-zinc-900 tracking-tight leading-tight">
-                    Рейтинг 5.0 на маркетплейсах
-                </h2>
-            </div>
-            <a href="https://ozon.ru" target="_blank" class="text-sm font-medium text-zinc-900 hover:text-[#E63946] transition flex items-center gap-2 group pb-1 border-b border-transparent hover:border-[#E63946]">
-                Читать все отзывы на OZON 
-                <svg class="w-4 h-4 transform group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
-                <div class="flex gap-1 mb-4 text-[#E63946]">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                </div>
-                <div class="text-zinc-900 font-medium mb-3">Идеально для квартиры с котом</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed mb-6 italic">
-                    «Искали диван, который легко чистится от шерсти. Ткань действительно антивандальная, цвет вживую даже глубже, чем на фото. Доставка сработала четко, ребята занесли всё очень аккуратно, были в бахилах.»
-                </p>
-                <div class="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Екатерина М. • Покупка на OZON</div>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
-                <div class="flex gap-1 mb-4 text-[#E63946]">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                </div>
-                <div class="text-zinc-900 font-medium mb-3">Никакого скрипа, сон как на облаке</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed mb-6 italic">
-                    «До этого был диван из масс-маркета, который начал скрипеть через полгода. Этот — монолит! Фанера и брус делают свое дело. Спать невероятно комфортно, пена HR отлично держит спину.»
-                </p>
-                <div class="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Алексей Д. • Покупка на OZON</div>
-            </div>
-
-            <div class="bg-white p-8 rounded-2xl border border-zinc-100 shadow-sm">
-                <div class="flex gap-1 mb-4 text-[#E63946]">
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                    <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.431 8.2 1.192-5.934 5.787 1.4 8.168L12 18.896l-7.334 3.858 1.4-8.168-5.934-5.787 8.2-1.192z"/></svg>
-                </div>
-                <div class="text-zinc-900 font-medium mb-3">Качество превышает цену</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed mb-6 italic">
-                    «Привезли в толстом пятислойном картоне, всё в идеале. Абсолютно никакого запаха клея, можно сразу спать. Качество сборки премиальное, выглядит в два раза дороже, чем стоит.»
-                </p>
-                <div class="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Виктория С. • Покупка на OZON</div>
-            </div>
-        </div>
-    </div>
-
-    <footer class="max-w-7xl w-full mx-auto mt-32 border-t border-zinc-200 pt-16 pb-12 px-4 sm:px-6 lg:px-12 text-zinc-800">
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-12 md:gap-8">
-            <div class="flex flex-col gap-5">
-                <div class="flex items-center gap-3">
-                    <img src="logo.png" alt="Центр Мебель" class="w-14 h-14 object-contain">
-                    <div class="text-2xl font-medium tracking-tight text-black leading-none">Центр Мебель</div>
-                </div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">
-                    Собственное производство дизайнерской мягкой мебели из отборной, правильно высушенной березовой древесины. Мы более 15 лет контролируем каждый этап от распила на высокоточных станках с ЧПУ до финальной строчки, чтобы создавать мебель, которая становится сердцем вашего дома.
-                </p>
-            </div>
-            <div class="flex flex-col gap-3">
-                <div class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Наши шоурумы</div>
-                <ul class="text-xs text-zinc-600 space-y-2 font-light">
-                    <li>Флагманский салон: <span class="font-normal text-black block mt-0.5">г. Москва, ул. Дизайнеров, д. 12</span></li>
-                    <li>Центральный шоурум: <span class="font-normal text-black block mt-0.5">г. Санкт-Петербург, Невский пр., д. 45</span></li>
-                    <li class="text-[11px] text-zinc-400 italic mt-2">Ежедневно с 10:00 до 22:00</li>
-                </ul>
-            </div>
-            <div class="flex flex-col gap-3">
-                <div class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Связаться с нами</div>
-                <a href="tel:+78000000000" class="text-base font-medium text-black hover:text-[#E63946] transition tracking-tight">8 (800) 555-35-35</a>
-                <p class="text-[11px] text-zinc-400 font-light -mt-1">Бесплатный звонок по всей России</p>
-                <div class="text-xs text-zinc-600 font-light mt-1">Отдел заботы: <br><span class="text-black font-normal hover:text-[#E63946] transition cursor-pointer">support@centrmebel.ru</span></div>
-            </div>
-            <div class="flex flex-col gap-3">
-                <div class="text-xs font-semibold tracking-wider uppercase text-zinc-400">Служба поддержки</div>
-                <p class="text-zinc-500 text-xs font-light leading-relaxed">Менеджеры на связи 24/7 в удобном для вас формате. Ответим на любые вопросы.</p>
-                <button onclick="window.Bitrix24WidgetObject && window.Bitrix24WidgetObject.show()" class="w-full bg-zinc-900 hover:bg-black text-white text-center text-xs font-medium py-3.5 px-4 rounded-full transition tracking-wide cursor-pointer shadow-sm mt-2">
-                    Открыть чат
-                </button>
-            </div>
-        </div>
-        <div class="border-t border-zinc-100 mt-16 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-zinc-400 font-light">
-            <div>© 2026 Фабрика «Центр мебель». Все права защищены.</div>
-            <div class="flex gap-6">
-                <a href="#" class="hover:text-black transition">Политика конфиденциальности</a>
-                <a href="#" class="hover:text-black transition">Публичная оферта</a>
-            </div>
-        </div>
-    </footer>
-
-    <div id="product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden opacity-0 transition-opacity duration-300 ease-out" style="background-color: rgba(0, 0, 0, 0.4); backdrop-filter: blur(20px);">
-        <div class="min-h-screen flex items-center justify-center p-4 md:p-12">
-            <div class="bg-white max-w-5xl w-full rounded-3xl shadow-2xl overflow-hidden relative transform scale-95 transition-transform duration-300 ease-out flex flex-col md:flex-row">
+    <!-- Модальное окно товара -->
+    <div id="product-modal" class="fixed inset-0 z-50 overflow-y-auto hidden opacity-0 transition-opacity duration-300 ease-out" style="background-color: rgba(0, 0, 0, 0.5); backdrop-filter: blur(15px);">
+        <div class="min-h-screen flex items-center justify-center p-4 md:p-8">
+            <div class="bg-white max-w-6xl w-full rounded-3xl shadow-2xl overflow-hidden relative transform scale-95 transition-transform duration-300 ease-out flex flex-col md:flex-row">
                 
                 <button onclick="closeModal()" class="absolute top-6 right-6 z-10 w-10 h-10 bg-zinc-100/80 hover:bg-zinc-200 rounded-full flex items-center justify-center transition cursor-pointer text-zinc-800">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
 
-                <div class="w-full md:w-1/2 bg-zinc-50 flex flex-col items-center justify-center p-8 min-h-[400px] md:min-h-[550px] relative group">
+                <div class="w-full md:w-1/2 bg-zinc-50 flex flex-col items-center justify-center p-8 min-h-[400px] md:min-h-[600px] relative group">
                     <div class="w-full flex-1 flex items-center justify-center relative overflow-hidden">
-                        <img id="modal-img" src="" alt="" class="max-w-full max-h-[400px] object-contain transition-all duration-300">
-                        <button id="gallery-prev" class="absolute left-2 w-10 h-10 rounded-full bg-white/80 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
+                        <img id="modal-img" src="" alt="" class="max-w-full max-h-[450px] object-contain transition-all duration-300">
+                        <button id="gallery-prev" class="absolute left-2 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
                         </button>
-                        <button id="gallery-next" class="absolute right-2 w-10 h-10 rounded-full bg-white/80 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
+                        <button id="gallery-next" class="absolute right-2 w-10 h-10 rounded-full bg-white/90 shadow-md flex items-center justify-center text-zinc-800 hover:bg-white transition cursor-pointer opacity-0 group-hover:opacity-100">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
                         </button>
                     </div>
-                    <div id="gallery-dots" class="flex items-center justify-center gap-2 mt-4"></div>
+                    <div id="gallery-dots" class="flex items-center justify-center gap-2 mt-6"></div>
                 </div>
 
-                <div class="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-between border-l border-zinc-100">
+                <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col justify-between border-l border-zinc-100 max-h-[600px] overflow-y-auto">
                     <div class="flex flex-col gap-4">
                         <span id="modal-category" class="text-xs font-semibold tracking-widest text-zinc-400 uppercase"></span>
                         <h2 id="modal-name" class="text-3xl font-light text-zinc-900 tracking-tight"></h2>
                         <div id="modal-price" class="text-xl font-medium text-zinc-900 mb-2"></div>
+                        
+                        <!-- Блок описания -->
+                        <div id="modal-description" class="text-zinc-500 text-sm font-light leading-relaxed mb-2"></div>
+                        
                         <hr class="border-zinc-100">
-                        <div class="w-full">
-                            <div class="flex border-b border-zinc-100 gap-4 text-[10px] uppercase tracking-wider font-semibold mb-4 overflow-x-auto pb-1">
-                                <button class="modal-tab-link text-black border-b border-black pb-1" data-modal-tab="modal-specs">Характеристики</button>
-                                <button class="modal-tab-link text-zinc-400 pb-1" data-modal-tab="modal-tech">Конструкция</button>
-                                <button class="modal-tab-link text-zinc-400 pb-1" data-modal-tab="modal-dimensions">Занос</button>
-                                <button class="modal-tab-link text-zinc-400 pb-1" data-modal-tab="modal-service">Сервис</button>
+                        
+                        <div class="w-full mt-2">
+                            <div class="flex border-b border-zinc-100 gap-6 text-[11px] uppercase tracking-wider font-semibold mb-5 overflow-x-auto pb-1">
+                                <button class="modal-tab-link text-black border-b-2 border-black pb-2" data-modal-tab="modal-specs">Характеристики</button>
+                                <button class="modal-tab-link text-zinc-400 pb-2 border-b-2 border-transparent hover:text-zinc-600 transition" data-modal-tab="modal-tech">Конструкция</button>
+                                <button class="modal-tab-link text-zinc-400 pb-2 border-b-2 border-transparent hover:text-zinc-600 transition" data-modal-tab="modal-service">Сервис</button>
                             </div>
                             <div class="min-h-[140px]">
-                                <div id="modal-specs" class="modal-tab-content text-zinc-600 text-xs leading-relaxed"></div>
-                                <div id="modal-tech" class="modal-tab-content hidden text-zinc-600 text-xs leading-relaxed"></div>
-                                <div id="modal-dimensions" class="modal-tab-content hidden text-zinc-600 text-xs leading-relaxed"></div>
-                                <div id="modal-service" class="modal-tab-content hidden text-zinc-600 text-xs leading-relaxed"></div>
+                                <div id="modal-specs" class="modal-tab-content text-zinc-700 text-sm leading-relaxed"></div>
+                                <div id="modal-tech" class="modal-tab-content hidden text-zinc-700 text-sm leading-relaxed"></div>
+                                <div id="modal-service" class="modal-tab-content hidden text-zinc-700 text-sm leading-relaxed"></div>
                             </div>
                         </div>
                     </div>
-                    <div class="flex flex-col sm:flex-row gap-3 mt-8">
-                        <a id="modal-ozon-btn" href="" target="_blank" class="w-full sm:w-1/2 bg-zinc-900 hover:bg-black text-white text-center text-xs font-medium py-4 px-6 rounded-full transition shadow-sm">
+                    <div class="flex flex-col sm:flex-row gap-3 mt-8 pt-6 border-t border-zinc-100">
+                        <a id="modal-ozon-btn" href="" target="_blank" class="w-full sm:w-1/2 bg-[#005BFF] hover:bg-blue-700 text-white text-center text-xs font-semibold py-4 px-6 rounded-xl transition shadow-sm flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
                             Купить на OZON
                         </a>
-                        <button onclick="window.Bitrix24WidgetObject && window.Bitrix24WidgetObject.show()" class="w-full sm:w-1/2 border border-zinc-200 hover:border-zinc-900 bg-transparent text-zinc-800 text-center text-xs font-medium py-4 px-6 rounded-full transition flex items-center justify-center gap-2 cursor-pointer">
-                            Консультация
+                        <button onclick="alert('Чат в разработке')" class="w-full sm:w-1/2 border-2 border-zinc-200 hover:border-zinc-900 bg-transparent text-zinc-800 text-center text-xs font-semibold py-4 px-6 rounded-xl transition flex items-center justify-center gap-2 cursor-pointer">
+                            Получить консультацию
                         </button>
                     </div>
                 </div>
@@ -393,46 +251,64 @@
         </div>
     </div>
 
-    
-   <script>
-        // В самом низу, в скрипте:
-const FIREBASE_URL = "https://centermebel-43737-default-rtdb.europe-west1.firebasedatabase.app"; 
+    <!-- Firebase Logic и Настройка IntersectionObserver -->
+    <script>
+        const FIREBASE_URL = "https://centermebel-43737-default-rtdb.europe-west1.firebasedatabase.app"; 
+        let PRODUCTS_DATA = [];
 
-document.addEventListener('DOMContentLoaded', async () => {
-    try {
-        // Добавляем .json в конце ссылки для Firebase
-        const response = await fetch(`${FIREBASE_URL}/products.json`);
-        const data = await response.json();
-        
-        if (data) {
-            PRODUCTS_DATA = Object.values(data); // Превращаем объект в массив
-            renderCatalog("all");
-        }
-    } catch (error) { console.error("Ошибка:", error); }
-});
+        // Настройка обозревателя для анимации карточек при скролле
+        const scrollObserverOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15 // Элемент начнет появляться, когда 15% его будет видно
+        };
+        const scrollObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target); // Анимируем только один раз
+                }
+            });
+        }, scrollObserverOptions);
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const response = await fetch(`${FIREBASE_URL}/products.json`);
+                const data = await response.json();
+                
+                if (data) {
+                    PRODUCTS_DATA = Object.values(data);
+                    renderCatalog("all");
+                }
+            } catch (error) { console.error("Ошибка:", error); }
+        });
 
         function renderCatalog(filterCategory = "all") {
             const container = document.getElementById('catalog-container');
             container.innerHTML = ''; 
 
-            const allowedCategories = filterCategory.split(',');
+            const allowedCategories = filterCategory.split(',').map(c => c.trim().toLowerCase());
 
             PRODUCTS_DATA.forEach(product => {
-                if (filterCategory !== "all" && !allowedCategories.includes(product.category) && !allowedCategories.includes(product.category.split(' ')[0])) {
+                const prodCategory = (product.category || "").toLowerCase();
+                if (filterCategory !== "all" && !allowedCategories.includes(prodCategory) && !allowedCategories.includes(prodCategory.split(' ')[0])) {
                     return;
                 }
 
-                // Умный фолбэк: если variants нет, берем данные из корня
                 const defaultVariant = (product.variants && product.variants.length > 0) 
                     ? product.variants[0] 
-                    : { mainImage: product.mainImage, colorName: 'Базовый' };
+                    : { mainImage: product.mainImage, colorName: 'Базовый', colorHex: '#000' };
 
                 const productCard = document.createElement('div');
-                productCard.className = "premium-card skeleton cursor-pointer";
+                // Добавляем класс reveal-on-scroll к каждой карточке
+                productCard.className = "premium-card skeleton cursor-pointer reveal-on-scroll";
                 productCard.id = `card-${product.id}`;
 
+                // Вся карточка кликабельна для открытия модалки
                 productCard.addEventListener('click', (e) => {
-                    if (e.target.tagName !== 'A') openModal(product);
+                    // Игнорируем клик, если нажата именно кнопка Ozon
+                    if (e.target.closest('a')) return;
+                    openModal(product);
                 });
 
                 productCard.innerHTML = `
@@ -443,75 +319,89 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <h2 class="text-3xl font-light text-white tracking-tight mb-2">${product.name}</h2>
                         <div class="text-xl font-normal text-white mb-4">${product.price}</div>
                         
-                        <div class="flex items-center gap-1.5 mb-4">
-                            ${product.variants ? product.variants.map(v => `<div class="w-3 h-3 rounded-full border border-white/40" style="background-color: ${v.colorHex}"></div>`).join('') : ''}
+                        <div class="flex items-center gap-2 mb-4">
+                            ${product.variants ? product.variants.map(v => `<div class="w-4 h-4 rounded-full border-2 border-white/40 shadow-sm" style="background-color: ${v.colorHex}" title="${v.colorName}"></div>`).join('') : ''}
                         </div>
 
                         <hr class="border-zinc-700/50 my-4">
-                        <p class="text-zinc-300 text-xs font-light leading-relaxed">Древесина собственного производства. Пена HR. Защита Easy Clean.</p>
+                        <p class="text-zinc-300 text-xs font-light leading-relaxed opacity-0 transform translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300">Нажмите, чтобы увидеть подробности, варианты цветов и характеристики.</p>
                         <div class="card-buttons flex flex-col gap-3 mt-4">
-                            <a href="${product.ozonLink}" target="_blank" class="w-full bg-white hover:bg-zinc-100 text-black text-center text-sm font-medium py-3.5 px-6 rounded-full transition shadow-sm">
-                                Подробнее / Купить на OZON
-                            </a>
+                            <span class="w-full bg-white text-black text-center text-sm font-medium py-3.5 px-6 rounded-full transition shadow-sm cursor-pointer hover:bg-zinc-100">
+                                Подробнее о модели
+                            </span>
                         </div>
                     </div>
                 `;
                 container.appendChild(productCard);
+                // Наблюдаем за карточкой для анимации скролла
+                scrollObserver.observe(productCard);
             });
         }
 
-        // ... код слайдера (updateModalImage, кнопки prev/next) остается без изменений ...
+        // Логика модального окна и галереи
+        let currentImageArray = [];
+        let currentImageIndex = 0;
+        const modal = document.getElementById('product-modal');
+        const modalContent = modal.querySelector('.bg-white');
+        const modalImg = document.getElementById('modal-img');
+        const dotsContainer = document.getElementById('gallery-dots');
 
         function openModal(product) {
-            // Умная загрузка картинок для слайдера
-            if (product.variants && product.variants.length > 0) {
-                currentImageArray = product.variants[0].thumbnails;
-            } else if (product.images && product.images.length > 0) {
-                currentImageArray = product.images;
-            } else {
-                currentImageArray = [product.mainImage];
-            }
-            
+            const initialVariant = product.variants ? product.variants[0] : { thumbnails: [product.mainImage] };
+            currentImageArray = initialVariant.thumbnails || [initialVariant.mainImage];
             currentImageIndex = 0;
 
-            document.getElementById('modal-category').textContent = product.category;
-            document.getElementById('modal-name').textContent = product.name;
-            document.getElementById('modal-price').textContent = product.price;
-            document.getElementById('modal-ozon-btn').href = product.ozonLink;
+            document.getElementById('modal-category').textContent = product.category || 'Мебель';
+            document.getElementById('modal-name').textContent = product.name || 'Без названия';
+            document.getElementById('modal-price').textContent = product.price || 'Цена по запросу';
+            document.getElementById('modal-ozon-btn').href = product.ozonLink || '#';
+            
+            // Вставляем описание
+            const descBlock = document.getElementById('modal-description');
+            if (product.description) {
+                descBlock.innerHTML = product.description;
+                descBlock.style.display = 'block';
+            } else {
+                descBlock.style.display = 'none';
+            }
 
-            document.getElementById('modal-specs').innerHTML = product.tabs?.specs || '<p>Загрузка...</p>';
-            document.getElementById('modal-tech').innerHTML = product.tabs?.tech || '<p>Загрузка...</p>';
-            document.getElementById('modal-dimensions').innerHTML = product.tabs?.dimensions || '<p>Загрузка...</p>';
-            document.getElementById('modal-service').innerHTML = product.tabs?.service || '<p>Загрузка...</p>';
+            document.getElementById('modal-specs').innerHTML = product.tabs?.specs || '<p class="text-zinc-400">Нет данных</p>';
+            document.getElementById('modal-tech').innerHTML = product.tabs?.tech || '<p class="text-zinc-400">Нет данных</p>';
+            document.getElementById('modal-service').innerHTML = product.tabs?.service || '<p class="text-zinc-400">Нет данных</p>';
 
-            // Генерируем палитру кликабельных кружочков переключения цветов прямо в модалке!
+            // Палитра цветов
             const modalSpecsBlock = document.getElementById('modal-specs');
-            const existingSwatches = document.getElementById('modal-swatches-container');
-            if (existingSwatches) existingSwatches.remove(); // Очищаем старые кружки
+            const oldSwatches = document.getElementById('modal-swatches-container');
+            if(oldSwatches) oldSwatches.remove();
 
-            if (product.variants && product.variants.length > 1) {
+            if (product.variants && product.variants.length > 0) {
                 const colorBlock = document.createElement('div');
                 colorBlock.id = 'modal-swatches-container';
-                colorBlock.className = "mt-6 border-t border-zinc-100 pt-4";
+                colorBlock.className = "mt-6 border-t border-zinc-100 pt-5";
                 colorBlock.innerHTML = `
-                    <span class="text-[10px] font-semibold text-zinc-400 uppercase block mb-2">Выберите цвет и ткань обивки:</span>
-                    <div class="flex items-center gap-3" id="modal-swatches"></div>
+                    <span class="text-[10px] font-bold text-zinc-400 uppercase tracking-wider block mb-3">Выберите цвет обивки:</span>
+                    <div class="flex flex-wrap items-center gap-3" id="modal-swatches"></div>
                 `;
-                modalSpecsBlock.appendChild(colorBlock);
+                
+                // Вставляем блок цветов перед вкладками (или в начало модалки)
+                descBlock.parentNode.insertBefore(colorBlock, descBlock.nextSibling);
 
                 const swatchesContainer = document.getElementById('modal-swatches');
                 product.variants.forEach((v, idx) => {
                     const swatch = document.createElement('button');
-                    swatch.className = `w-8 h-8 rounded-full ring-offset-2 ring-black transition ${idx === 0 ? 'ring-2' : 'ring-0'}`;
+                    swatch.className = `w-10 h-10 rounded-full ring-offset-2 ring-black transition-all ${idx === 0 ? 'ring-2 scale-110' : 'ring-0 hover:scale-110'} shadow-sm border border-zinc-200`;
                     swatch.style.backgroundColor = v.colorHex;
                     swatch.title = v.colorName;
                     
                     swatch.addEventListener('click', (e) => {
                         e.stopPropagation();
-                        swatchesContainer.querySelectorAll('button').forEach(b => b.classList.replace('ring-2', 'ring-0'));
+                        swatchesContainer.querySelectorAll('button').forEach(b => {
+                            b.classList.replace('ring-2', 'ring-0');
+                            b.classList.remove('scale-110');
+                        });
                         swatch.classList.replace('ring-0', 'ring-2');
+                        swatch.classList.add('scale-110');
                         
-                        // Меняем галерею картинок на фотографии ВЫБРАННОГО цвета!
                         currentImageArray = v.thumbnails && v.thumbnails.length > 0 ? v.thumbnails : [v.mainImage];
                         currentImageIndex = 0;
                         buildDots();
@@ -523,9 +413,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             function buildDots() {
                 dotsContainer.innerHTML = '';
+                if(currentImageArray.length <= 1) return; // Не показываем точки, если фото одно
+                
                 currentImageArray.forEach((_, idx) => {
                     const dot = document.createElement('div');
-                    dot.className = "cursor-pointer";
+                    dot.className = "cursor-pointer p-1";
+                    const innerDot = document.createElement('div');
+                    innerDot.className = "w-2 h-2 rounded-full bg-zinc-300 transition-all duration-300";
+                    dot.appendChild(innerDot);
+                    
                     dot.addEventListener('click', () => {
                         currentImageIndex = idx;
                         updateModalImage();
@@ -545,24 +441,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.body.style.overflow = 'hidden';
         }
 
-        const modalImg = document.getElementById('modal-img');
-        const dotsContainer = document.getElementById('gallery-dots');
-
         function updateModalImage() {
+            if(!currentImageArray || currentImageArray.length === 0) return;
+            
             modalImg.classList.remove('slide-animate');
-            void modalImg.offsetWidth; 
+            void modalImg.offsetWidth; // Триггер рефлоу для перезапуска анимации
             
             modalImg.src = currentImageArray[currentImageIndex];
             modalImg.classList.add('slide-animate');
             
-            const dots = dotsContainer.querySelectorAll('div');
+            const dots = dotsContainer.querySelectorAll('div > div');
             dots.forEach((dot, idx) => {
                 if (idx === currentImageIndex) {
-                    dot.className = "w-6 h-1.5 rounded-full bg-zinc-900 transition-all duration-300";
+                    dot.className = "w-6 h-2 rounded-full bg-zinc-900 transition-all duration-300";
                 } else {
-                    dot.className = "w-1.5 h-1.5 rounded-full bg-zinc-300 transition-all duration-300";
+                    dot.className = "w-2 h-2 rounded-full bg-zinc-300 transition-all duration-300";
                 }
             });
+            
+            // Скрываем стрелки, если фото только одно
+            document.getElementById('gallery-prev').style.display = currentImageArray.length > 1 ? 'flex' : 'none';
+            document.getElementById('gallery-next').style.display = currentImageArray.length > 1 ? 'flex' : 'none';
         }
 
         document.getElementById('gallery-prev').addEventListener('click', (e) => {
@@ -577,82 +476,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             updateModalImage();
         });
 
-        const modal = document.getElementById('product-modal');
-        const modalContent = modal.querySelector('.bg-white');
-
-        function openModal(product) {
-            // Инициализируем слайдер первыми картинками первого цвета
-            const initialVariant = product.variants ? product.variants[0] : { thumbnails: [product.mainImage] };
-            currentImageArray = initialVariant.thumbnails;
-            currentImageIndex = 0;
-
-            document.getElementById('modal-category').textContent = product.category;
-            document.getElementById('modal-name').textContent = product.name;
-            document.getElementById('modal-price').textContent = product.price;
-            document.getElementById('modal-ozon-btn').href = product.ozonLink;
-
-            document.getElementById('modal-specs').innerHTML = product.tabs?.specs || '<p>Загрузка...</p>';
-            document.getElementById('modal-tech').innerHTML = product.tabs?.tech || '<p>Загрузка...</p>';
-            document.getElementById('modal-dimensions').innerHTML = product.tabs?.dimensions || '<p>Загрузка...</p>';
-            document.getElementById('modal-service').innerHTML = product.tabs?.service || '<p>Загрузка...</p>';
-
-            // Генерируем палитру кликабельных кружочков переключения цветов прямо в модалке!
-            const modalSpecsBlock = document.getElementById('modal-specs');
-            if (product.variants && product.variants.length > 1) {
-                const colorBlock = document.createElement('div');
-                colorBlock.className = "mt-6 border-t border-zinc-100 pt-4";
-                colorBlock.innerHTML = `
-                    <span class="text-[10px] font-semibold text-zinc-400 uppercase block mb-2">Выберите цвет и ткань обивки:</span>
-                    <div class="flex items-center gap-3" id="modal-swatches"></div>
-                `;
-                modalSpecsBlock.appendChild(colorBlock);
-
-                const swatchesContainer = document.getElementById('modal-swatches');
-                product.variants.forEach((v, idx) => {
-                    const swatch = document.createElement('button');
-                    swatch.className = `w-8 h-8 rounded-full ring-offset-2 ring-black transition ${idx === 0 ? 'ring-2' : 'ring-0'}`;
-                    swatch.style.backgroundColor = v.colorHex;
-                    swatch.title = v.colorName;
-                    
-                    swatch.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        swatchesContainer.querySelectorAll('button').forEach(b => b.classList.replace('ring-2', 'ring-0'));
-                        swatch.classList.replace('ring-0', 'ring-2');
-                        
-                        // Меняем галерею картинок на фотографии ВЫБРАННОГО цвета!
-                        currentImageArray = v.thumbnails;
-                        currentImageIndex = 0;
-                        buildDots();
-                        updateModalImage();
-                    });
-                    swatchesContainer.appendChild(swatch);
-                });
-            }
-
-            function buildDots() {
-                dotsContainer.innerHTML = '';
-                currentImageArray.forEach((_, idx) => {
-                    const dot = document.createElement('div');
-                    dot.className = "cursor-pointer";
-                    dot.addEventListener('click', () => {
-                        currentImageIndex = idx;
-                        updateModalImage();
-                    });
-                    dotsContainer.appendChild(dot);
-                });
-            }
-
-            buildDots();
-            updateModalImage();
-
-            modal.classList.remove('hidden');
-            setTimeout(() => {
-                modal.classList.remove('opacity-0');
-                modalContent.classList.remove('scale-95');
-            }, 10);
-            document.body.style.overflow = 'hidden';
-        }
-
         function closeModal() {
             modal.classList.add('opacity-0');
             modalContent.classList.add('scale-95');
@@ -664,7 +487,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (e.target === modal || e.target.classList.contains('min-h-screen')) closeModal();
         });
 
-        // ЛОГИКА ТАБОВ
+        // ЛОГИКА ТАБОВ В МОДАЛКЕ
         const modalTabLinks = document.querySelectorAll('.modal-tab-link');
         const modalTabContents = document.querySelectorAll('.modal-tab-content');
 
@@ -673,16 +496,17 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const targetTabId = this.getAttribute('data-modal-tab');
                 modalTabLinks.forEach(l => {
                     l.classList.replace('text-black', 'text-zinc-400');
-                    l.style.borderBottomColor = 'transparent';
+                    l.classList.replace('border-black', 'border-transparent');
                 });
                 modalTabContents.forEach(c => c.classList.add('hidden'));
+                
                 this.classList.replace('text-zinc-400', 'text-black');
-                this.style.borderBottomColor = '#000000';
+                this.classList.replace('border-transparent', 'border-black');
                 document.getElementById(targetTabId).classList.remove('hidden');
             });
         });
 
-        // Фильтрация категорий
+        // ФИЛЬТРЫ КАТЕГОРИЙ
         const filterButtons = document.querySelectorAll('.filter-btn');
         filterButtons.forEach(btn => {
             btn.addEventListener('click', function() {
@@ -696,16 +520,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
+        // Плавный эффект для шапки при скролле (и появление нижних инфо-блоков)
         window.addEventListener('scroll', function() {
             const header = document.getElementById('main-header');
             if (window.scrollY > 20) {
-                header.classList.add('bg-[#fcfcfc]/80', 'backdrop-blur-md', 'shadow-sm');
+                header.classList.add('bg-[#fcfcfc]/90', 'backdrop-blur-md', 'shadow-sm');
             } else {
-                header.classList.remove('bg-[#fcfcfc]/80', 'backdrop-blur-md', 'shadow-sm');
+                header.classList.remove('bg-[#fcfcfc]/90', 'backdrop-blur-md', 'shadow-sm');
             }
         });
 
-        renderCatalog("all");
+        // Применяем observer к статичным блокам внизу страницы
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => scrollObserver.observe(el));
     </script>
 </body>
 </html>
